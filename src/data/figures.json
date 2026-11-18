@@ -1,0 +1,208 @@
+{
+  "about": "The figures in Dinis Cruz's white paper \"Dynamic Weather-Driven Algarve Tourism Campaign\", each checked against a primary source where one was found. Status is one of: confirmed by primary source, differs from primary source, source unconfirmed. Distances are computed great-circle (haversine, Earth radius 6371.0088 km) from OpenStreetMap coordinates; they are straight lines, and road distances are longer. Kept by analyst.london-billboard@AgentiCCells.dinis; details in team/rounds/1/data/FIGURES.md.",
+  "read_at": "2026-11-18T18:10:00Z",
+  "figures": [
+    {
+      "id": "sunshine-days",
+      "claim": "The Algarve has over 300 days of sunshine a year",
+      "white_paper_wording": "the Algarve's 300+ days of sunshine; over 300 days of sunshine a year",
+      "status": "confirmed by primary source",
+      "primary": {
+        "value": "Faro airport: on average 9.0 days a year with no sunshine at all and 37.2 days with 20% or less of the possible sunshine, so about 356 days with some sunshine and about 328 with more than 20%; 3044.4 hours of sunshine a year",
+        "period": "1971-2000 climate normal (station data 1971-1995)",
+        "publisher": "IPMA (then Instituto de Meteorologia), Normal Climatológica Faro/Aeroporto (554)",
+        "url": "https://www.ipma.pt/bin/file.data/climate-normal/cn_71-00_FARO.pdf",
+        "read": "2026-11-18"
+      },
+      "note": "True if a day of sunshine means a day with some sun. Faro station only, not the whole Algarve. IPMA's 1991-2020 normal for Faro has no sunshine figures. The paper's own source is a tour operator's page, not primary."
+    },
+    {
+      "id": "blue-flag-beaches",
+      "claim": "The Algarve has dozens of Blue Flag beaches",
+      "white_paper_wording": "dozens of Blue Flag beaches (its source list says 87 Blue Flag beaches)",
+      "status": "confirmed by primary source",
+      "primary": {
+        "value": "Algarve: 94 Blue Flag sites, of which 86 are beaches (the other 8 are 6 marinas and 2 boats, our count from the list)",
+        "period": "2026 season",
+        "publisher": "ABAAE, Associação Bandeira Azul de Ambiente e Educação (Blue Flag in Portugal)",
+        "url": "https://bandeiraazul.abaae.pt/galardoados/galardoados-2026/",
+        "read": "2026-11-18"
+      },
+      "note": "\"Dozens\" holds. The paper's 87 is from an earlier year; in 2026 it is 86 beaches. Albufeira alone has 24 beaches and its marina."
+    },
+    {
+      "id": "january-sunshine-algarve",
+      "claim": "January days in the Algarve average around five hours of sunshine",
+      "white_paper_wording": "January days in the Algarve still average around five hours of sunshine",
+      "status": "differs from primary source",
+      "primary": {
+        "value": "182.1 hours of sunshine in January at Faro airport, about 5.9 hours a day",
+        "period": "1971-2000 climate normal (station data 1971-1995)",
+        "publisher": "IPMA (then Instituto de Meteorologia), Normal Climatológica Faro/Aeroporto (554)",
+        "url": "https://www.ipma.pt/bin/file.data/climate-normal/cn_71-00_FARO.pdf",
+        "read": "2026-11-18"
+      },
+      "note": "Nearer six hours than five (182.1 / 31 = 5.87). Say \"about six hours a day in January at Faro (IPMA, 1971-2000)\"."
+    },
+    {
+      "id": "january-sunshine-london",
+      "claim": "London often sees only about one hour of sunshine a day in January",
+      "white_paper_wording": "while London often sees only about one hour",
+      "status": "differs from primary source",
+      "primary": {
+        "value": "59.0 hours of sunshine in January at Heathrow, about 1.9 hours a day (our mean of the 30 monthly totals; 1971-2000 gives 55.1 hours, 1.8 a day)",
+        "period": "January 1991 to January 2020",
+        "publisher": "Met Office, historic station data, Heathrow (London Airport)",
+        "url": "https://www.metoffice.gov.uk/pub/data/weather/uk/climate/stationdata/heathrowdata.txt",
+        "read": "2026-11-18"
+      },
+      "note": "About two hours a day, not one. The Met Office's own averages table (https://www.metoffice.gov.uk/research/climate/maps-and-data/uk-climate-averages/gcpsveqyg) loads by script and was not read; our mean may differ from it by a little. Together with Faro: about three times London's January sunshine, not five."
+    },
+    {
+      "id": "winter-temperatures",
+      "claim": "Example temperatures of 24 to 26 C in the Algarve against 9 to 14 C in London",
+      "white_paper_wording": "\"Algarve today: 24°C & sunny. London: 9°C & drizzle.\"; \"Next 3 days in Algarve: 26°C sun / 25°C sun / 24°C sun\"",
+      "status": "differs from primary source",
+      "primary": {
+        "value": "Faro airport mean daily maximum: November 19.6 C, December 17.1 C, January 16.3 C; days of 25 C or more: November 0.3, December 0.0, January 0.0",
+        "period": "1991-2020 climate normal",
+        "publisher": "IPMA, Normal Climatológica Faro 1991-2020 (station 554)",
+        "url": "https://www.ipma.pt/bin/file.data/climate-normal/cn_91-20_FARO.pdf",
+        "read": "2026-11-18"
+      },
+      "note": "The paper's numbers are examples, not claims, but 24 to 26 C is a summer or late-spring value at Faro, rare from November to February. Heathrow's January mean maximum is 8.4 C (our mean of Met Office monthly data, 1991-2020), so the London side of the example is fair."
+    },
+    {
+      "id": "hotels-closed-winter",
+      "claim": "Roughly 50% of Algarve hotels close for the winter months",
+      "white_paper_wording": "in typical years roughly 50% of Algarve hotels close for the winter months (due to lack of visitors)",
+      "status": "source unconfirmed",
+      "primary": null,
+      "note": "The paper gives no source. INE publishes each month the share of tourist accommodation establishments closed or without guests, but no Algarve figure for a winter month in a normal year was found from INE itself in this round. Do not use the 50% until one is."
+    },
+    {
+      "id": "flight-time-london-faro",
+      "claim": "The flight from London to Faro takes about 2h40m",
+      "white_paper_wording": "just 2h40m flight time",
+      "status": "source unconfirmed",
+      "primary": null,
+      "note": "No primary timetable was checked (airline timetables were not used, so as to name no airline). Computed great-circle distance: Gatwick to Faro 1688 km (911 nm), Heathrow to Faro 1713 km, Luton 1757 km, Stansted 1774 km. Any flight time on the screen stays an invented example."
+    },
+    {
+      "id": "door-to-door-time",
+      "claim": "You could be in the Algarve in about five hours",
+      "white_paper_wording": "You could be here in 5 hours; Only 5 hours away",
+      "status": "source unconfirmed",
+      "primary": null,
+      "note": "Advertising copy built from a flight time plus travel to and from airports. Treat as an invented example."
+    },
+    {
+      "id": "distance-faro-marina",
+      "claim": "Faro Marina and Old Town are 0 km from Faro",
+      "white_paper_wording": "Faro Marina and Old Town (0 km from Faro)",
+      "status": "confirmed by primary source",
+      "primary": {
+        "value": "2.6 km from Faro airport (straight line); in Faro itself",
+        "period": "computed 2026-11-18",
+        "publisher": "Computed from OpenStreetMap coordinates (Marina de Faro 37.0151, -7.9363; Faro airport LPFR 37.0144, -7.9659)",
+        "url": "https://www.openstreetmap.org/way/450048112",
+        "read": "2026-11-18"
+      },
+      "note": "Great-circle (haversine). Coordinates are OpenStreetMap contributors' data, ODbL 1.0."
+    },
+    {
+      "id": "distance-vilamoura",
+      "claim": "Vilamoura Marina is about 20 km west of Faro",
+      "white_paper_wording": "Vilamoura Marina (~20 km west of Faro)",
+      "status": "confirmed by primary source",
+      "primary": {
+        "value": "15.4 km from Faro airport, 17.7 km from Marina de Faro (straight line), west",
+        "period": "computed 2026-11-18",
+        "publisher": "Computed from OpenStreetMap coordinates (Marina de Vilamoura 37.0787, -8.1189)",
+        "url": "https://www.openstreetmap.org/way/39574838",
+        "read": "2026-11-18"
+      },
+      "note": "Within the paper's \"about 20 km\"; by road it is longer. Great-circle (haversine)."
+    },
+    {
+      "id": "distance-falesia",
+      "claim": "Praia da Falésia is about 30 km west of Faro",
+      "white_paper_wording": "Praia da Falésia (~30 km west of Faro)",
+      "status": "differs from primary source",
+      "primary": {
+        "value": "17.9 km from Faro airport, 20.3 km from Marina de Faro (straight line, to the middle of the beach), west",
+        "period": "computed 2026-11-18",
+        "publisher": "Computed from OpenStreetMap coordinates (Praia da Falésia 37.0805, -8.1495)",
+        "url": "https://www.openstreetmap.org/way/675161585",
+        "read": "2026-11-18"
+      },
+      "note": "About 18 to 20 km in a straight line, not 30. The beach is several kilometres long, between Vilamoura and Olhos de Água. Great-circle (haversine)."
+    },
+    {
+      "id": "distance-albufeira",
+      "claim": "Albufeira Old Town and beach are about 30 km west of Faro",
+      "white_paper_wording": "Albufeira Old Town & Beach (~30 km west of Faro)",
+      "status": "confirmed by primary source",
+      "primary": {
+        "value": "26.8 km from Faro airport, 29.2 km from Marina de Faro (straight line), west",
+        "period": "computed 2026-11-18",
+        "publisher": "Computed from OpenStreetMap coordinates (Largo Engenheiro Duarte Pacheco, Albufeira, 37.0884, -8.2527)",
+        "url": "https://www.openstreetmap.org/way/1581132572",
+        "read": "2026-11-18"
+      },
+      "note": "Great-circle (haversine)."
+    },
+    {
+      "id": "distance-tavira",
+      "claim": "Tavira riverfront is about 30 km east of Faro",
+      "white_paper_wording": "Tavira Riverfront (~30 km east of Faro)",
+      "status": "confirmed by primary source",
+      "primary": {
+        "value": "30.7 km from Faro airport, 28.3 km from Marina de Faro (straight line), east",
+        "period": "computed 2026-11-18",
+        "publisher": "Computed from OpenStreetMap coordinates (Ponte Romana, Tavira, 37.1269, -7.6498)",
+        "url": "https://www.openstreetmap.org/way/171894084",
+        "read": "2026-11-18"
+      },
+      "note": "Great-circle (haversine)."
+    },
+    {
+      "id": "sunset-times",
+      "claim": "Sunset in the Algarve at 5:30pm when daylight in London ended at 4pm",
+      "white_paper_wording": "Sunset in Algarve at 5:30pm – daylight in London ended at 4pm",
+      "status": "confirmed by primary source",
+      "primary": {
+        "value": "Faro 17:21, London 16:08 on 18 November 2026; Faro 17:18, London 15:53 on 21 December; Faro 17:37, London 16:18 on 15 January (all UTC, which is local time in both in winter)",
+        "period": "computed for November 2026 to January 2027",
+        "publisher": "Computed with NOAA's solar position equations (General Solar Position Calculations, NOAA Global Monitoring Laboratory)",
+        "url": "https://gml.noaa.gov/grad/solcalc/solareqns.PDF",
+        "read": "2026-11-18"
+      },
+      "note": "About an hour and a quarter to an hour and a half more daylight in Faro in winter. Approximate to a minute or two; the screen can compute the day's times live and label them computed."
+    },
+    {
+      "id": "uk-top-market",
+      "claim": "The UK is one of the Algarve's top tourist markets",
+      "white_paper_wording": "The UK is one of Algarve's top tourist markets",
+      "status": "source unconfirmed",
+      "primary": null,
+      "note": "News reports of INE data put the UK at about 34 to 36% of non-resident overnight stays in the Algarve in 2025, the largest foreign market, but INE's own table was not read in this round."
+    },
+    {
+      "id": "weather-search-spikes",
+      "claim": "Searches and bookings for sunny destinations rise during bad weather at home",
+      "white_paper_wording": "travel sites report spikes in searches for sunny destinations during cold or rainy local weather",
+      "status": "source unconfirmed",
+      "primary": null,
+      "note": "The paper's source is a weather-advertising vendor's blog, not primary research."
+    },
+    {
+      "id": "live-billboard-precedent",
+      "claim": "A live 'midnight sun' billboard campaign in Vancouver inspired travel interest",
+      "white_paper_wording": "Similar campaigns (e.g. Tourism Yukon's live \"midnight sun\" billboards in Canada) have proven effective at inspiring travel",
+      "status": "source unconfirmed",
+      "primary": null,
+      "note": "The paper's source is a Pinterest pin. Do not repeat the effectiveness claim; if the precedent is mentioned at all, say it is reported, and do not suggest that tourism body has any link to this site."
+    }
+  ]
+}
