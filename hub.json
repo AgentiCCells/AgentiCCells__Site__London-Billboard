@@ -1,10 +1,13 @@
 {
   "schema": "hub.json (draft)",
   "name": "A London billboard, live from the Algarve",
-  "what_it_does": "A simulated demonstration: a weather-driven London billboard showing the Algarve live, built by an agentic team from the public data PrompTugal.news collects.",
+  "what_it_does": "A simulated demonstration of Dinis Cruz's weather-driven billboard: a portrait screen in London (weather simulated) or a Portuguese city (live IPMA), showing the Algarve live from the public data PrompTugal.news collects.",
   "owner": "AgentiCCells",
-  "team": "factory@AgentiCCells.dinis, instructed by Dinis Cruz",
-  "licence": { "code": "Apache-2.0", "text": "CC BY 4.0" },
+  "team": "conductor.london-billboard@AgentiCCells.dinis and its team (analyst, designer, developer, writer, reviewer), instructed by Dinis Cruz",
+  "licence": {
+    "code": "Apache-2.0",
+    "text": "CC BY 4.0"
+  },
   "repository": "https://github.com/AgentiCCells/AgentiCCells__Site__London-Billboard",
   "live_address": "https://london-billboard.agenticcells.site",
   "version_from": "https://london-billboard.agenticcells.site/version.json"
