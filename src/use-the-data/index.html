@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Use the data | London billboard (a simulation)</title>
+<meta name="description" content="The live data behind this simulated billboard: what data.promptugal.news is, the files the screen reads and why, copy-paste examples in JavaScript and curl, how to read a source card and its terms, and how to build a screen like this one.">
+<meta name="share-image" content="/assets/share/use-the-data.png">
+<!--HEAD-->
+</head>
+<body data-sources="by-place ipma-city-forecasts ipma-observations ipma-sea ipma-uv ipma-warnings adsb-faro events-pt">
+<!--HEADER-->
+<main id="main" class="prose">
+<h1>Use the data</h1>
+<p class="lede">Simulation: the billboard on this site does not exist. The Algarve weather on it is real, and so is the weather for Porto, Braga and Lisbon. It comes from public JSON files that anyone can read, with no key. This page shows where they are, why the screen reads each one, how to read them, the terms that come with them, and how to build a screen like this one.</p>
+
+<h2 id="what">What data.promptugal.news is</h2>
+<p><a href="https://data.promptugal.news/">data.promptugal.news</a> is the raw data behind the PrompTugal.news sites: public data about Portugal (weather, warnings, sea, UV, flights seen near Faro, events), collected by code on a schedule and served as plain JSON files. There are no articles and no model in the loop. Every file is a GET request with no key, and any website may read it from a visitor's browser (CORS is open).</p>
+<ul>
+<li><a href="https://data.promptugal.news/llms.txt">llms.txt</a>: the data site in one text file, for people and agents.</li>
+<li><a href="https://data.promptugal.news/api/v1/index.json">Catalogue</a> (<code>api/v1/index.json</code>): every source with its title, publisher, cadence, <code>read_at</code>, <code>status</code> and addresses. Read addresses from here rather than building them by hand.</li>
+<li><a href="https://data.promptugal.news/api/v1/openapi.json">OpenAPI 3.1</a> (<code>api/v1/openapi.json</code>): every path with a schema and an example.</li>
+<li><a href="https://data.promptugal.news/api/v1/README.md">Contract</a> (<code>api/v1/README.md</code>): the version 1 addresses and fields stay for the life of version 1; a breaking change goes to <code>api/v2/</code>.</li>
+</ul>
+<p>Each source has three files in its own folder, <code>https://data.promptugal.news/api/v1/&lt;source&gt;/</code>:</p>
+<ul>
+<li><code>latest.json</code>: the records from the last read, with their provenance (<code>read_at</code>, the source address, the publisher's page and the terms).</li>
+<li><code>reads.json</code>: a log of the collector's runs, newest first: each request's address, HTTP status, size, the start of its checksum, and whether the bytes changed. It logs runs, not values.</li>
+<li><code>card.json</code>: who publishes the data, the terms, the schedule. Read the card before you reuse a value.</li>
+</ul>
+<p>There is also one file per Algarve place, <code>api/v1/by-place/now/&lt;place&gt;.json</code>, that picks out the nearest IPMA values for that place, each with its own source and time read.</p>
+
+<h2 id="files">The files this screen reads, and why</h2>
+<p>The screen has two sides: "there" (a place in the Algarve) and "here" (where the screen stands). The Algarve side is always live. The here side is live for Porto, Braga and Lisbon, and simulated for London, because no London source exists on data.promptugal.news (checked 18 November 2026).</p>
+<div class="table-wrap">
+<table>
+<thead><tr><th scope="col">File</th><th scope="col">Why the screen reads it</th><th scope="col">Publisher</th><th scope="col">Cadence</th><th scope="col">Terms in short</th><th scope="col">Status now</th></tr></thead>
+<tbody>
+<tr><td><a href="https://data.promptugal.news/api/v1/by-place/now/faro.json"><code>by-place/now/faro.json</code></a>, and the same for <a href="https://data.promptugal.news/api/v1/by-place/now/albufeira.json"><code>albufeira</code></a>, <a href="https://data.promptugal.news/api/v1/by-place/now/tavira.json"><code>tavira</code></a>, <a href="https://data.promptugal.news/api/v1/by-place/now/quarteira.json"><code>quarteira</code></a> (for Vilamoura), <a href="https://data.promptugal.news/api/v1/by-place/now/portimao.json"><code>portimao</code></a> and <a href="https://data.promptugal.news/api/v1/by-place/now/lagos.json"><code>lagos</code></a></td><td>The Algarve side: the nearest IPMA station's latest hour (temperature, rain, wind), the five-day forecast, sea, UV and warnings for the chosen place, in one file. Faro's file also holds the aircraft seen near Faro airport.</td><td>IPMA (and adsb.lol for Faro's aircraft), put together by data.promptugal.news</td><td>Rebuilt with each hourly run</td><td>Each value keeps its source's terms (see the rows below)</td><td data-status="by-place">not read yet</td></tr>
+<tr><td><code>ipma-city-forecasts</code>: <a href="https://data.promptugal.news/api/v1/ipma-city-forecasts/latest.json">latest</a>, <a href="https://data.promptugal.news/api/v1/ipma-city-forecasts/reads.json">reads</a>, <a href="https://data.promptugal.news/api/v1/ipma-city-forecasts/card.json">card</a></td><td>The here side for Porto (<code>1131200</code>), Braga (<code>1030300</code>) and Lisbon (<code>1110600</code>): today's weather type and the next days, for the comparison.</td><td>IPMA, Instituto Português do Mar e da Atmosfera</td><td>Hourly</td><td>Free use with no profit-making or offensive purpose; always name IPMA</td><td data-status="ipma-city-forecasts">not read yet</td></tr>
+<tr><td><code>ipma-observations</code>: <a href="https://data.promptugal.news/api/v1/ipma-observations/latest.json">latest</a>, <a href="https://data.promptugal.news/api/v1/ipma-observations/reads.json">reads</a>, <a href="https://data.promptugal.news/api/v1/ipma-observations/card.json">card</a></td><td>The here side's temperature and rain now: the nearest IPMA station to the city that reported a temperature in the latest hour. The screen names the station and how far it is.</td><td>IPMA</td><td>Hourly</td><td>As above</td><td data-status="ipma-observations">not read yet</td></tr>
+<tr><td><code>ipma-sea</code>: <a href="https://data.promptugal.news/api/v1/ipma-sea/latest.json">latest</a>, <a href="https://data.promptugal.news/api/v1/ipma-sea/reads.json">reads</a>, <a href="https://data.promptugal.news/api/v1/ipma-sea/card.json">card</a></td><td>Sea temperature and wave height for the Algarve coast (read inside the by-place file, which names this source).</td><td>IPMA</td><td>Hourly</td><td>As above</td><td data-status="ipma-sea">not read yet</td></tr>
+<tr><td><code>ipma-uv</code>: <a href="https://data.promptugal.news/api/v1/ipma-uv/latest.json">latest</a>, <a href="https://data.promptugal.news/api/v1/ipma-uv/reads.json">reads</a>, <a href="https://data.promptugal.news/api/v1/ipma-uv/card.json">card</a></td><td>The UV index forecast (read inside the by-place file).</td><td>IPMA</td><td>Hourly</td><td>As above</td><td data-status="ipma-uv">not read yet</td></tr>
+<tr><td><code>ipma-warnings</code>: <a href="https://data.promptugal.news/api/v1/ipma-warnings/latest.json">latest</a>, <a href="https://data.promptugal.news/api/v1/ipma-warnings/reads.json">reads</a>, <a href="https://data.promptugal.news/api/v1/ipma-warnings/card.json">card</a></td><td>Any yellow, orange or red warning for the Faro district (area <code>FAR</code>, read inside the by-place file). The screen shows it as it stands and never as an advert.</td><td>IPMA</td><td>Hourly</td><td>As above</td><td data-status="ipma-warnings">not read yet</td></tr>
+<tr><td><code>adsb-faro</code>: <a href="https://data.promptugal.news/api/v1/adsb-faro/latest.json">latest</a>, <a href="https://data.promptugal.news/api/v1/adsb-faro/reads.json">reads</a>, <a href="https://data.promptugal.news/api/v1/adsb-faro/card.json">card</a></td><td>A count of airline flights seen within 40 nautical miles of Faro airport at the time read: a live sign that people are flying in. Flight times and prices on the screen are invented examples, not from this file.</td><td>adsb.lol (community ADS-B receivers)</td><td>Hourly</td><td>ODbL 1.0: attribution and share-alike</td><td data-status="adsb-faro">not read yet</td></tr>
+<tr><td><code>events-pt</code>: <a href="https://data.promptugal.news/api/v1/events-pt/latest.json">latest</a>, <a href="https://data.promptugal.news/api/v1/events-pt/reads.json">reads</a>, <a href="https://data.promptugal.news/api/v1/events-pt/card.json">card</a></td><td>On the <a href="/plan/">planning assistant</a> only: what is on in Faro, Lagos and Tavira, now to 60 days ahead, by name, date, venue and a link.</td><td>Public agendas of municipalities and a venue in Lisbon and the Algarve (the card names each)</td><td>Every 6 hours</td><td>Reference use only; name the source; link to the event; no AI training</td><td data-status="events-pt">not read yet</td></tr>
+</tbody>
+</table>
+</div>
+<p class="src">Addresses, publishers, cadences and terms from data.promptugal.news's <a href="https://data.promptugal.news/llms.txt">llms.txt</a>, <a href="https://data.promptugal.news/api/v1/index.json">catalogue</a> and each source's card, read with curl on 18 November 2026 at about 18:10 UTC; each address answered HTTP 200. The status column is filled in your browser when the page opens: each source's <code>status</code> and <code>read_at</code> from the catalogue, and Faro's <code>read_at</code> for the by-place files.</p>
+<p class="src" id="status-note" role="status">The status column needs JavaScript; without it, open the <a href="https://data.promptugal.news/api/v1/index.json">catalogue</a> directly.</p>
+
+<h2 id="examples">Copy and paste</h2>
+<p>Each example runs in a browser console or in Node 18 and later (JavaScript), or in a terminal with curl and jq. They only read: every request is a GET.</p>
+
+<h3>JavaScript</h3>
+<pre><code>const base = 'https://data.promptugal.news/api/v1';
+const get = async url =&gt; {
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(`${url}: HTTP ${r.status}`);
+  return r.json();
+};
+
+// 1. List the sources, with publisher, cadence, last read and status
+const cat = await get(`${base}/index.json`);
+for (const s of cat.sources)
+  console.log(s.id, '|', s.publisher, '|', s.cadence, '|', s.read_at, '|', s.status);
+
+// 2. Faro now: the nearest IPMA station's latest hour, and today's IPMA forecast
+const faro = await get(`${base}/by-place/now/faro.json`);
+const r = faro.station.reading;
+console.log(`${faro.station.name}, ${faro.station.km} km: ${r.temp_c}°C, ${r.rain_mm} mm rain, hour ${r.at}`);
+const today = new Date().toLocaleDateString('en-CA', { timeZone: 'Europe/Lisbon' });
+console.log('Today:', faro.forecast.days.find(d =&gt; d.date === today));
+console.log('Source: IPMA, via data.promptugal.news, read', faro.reads.observations.at);
+
+// 3. The forecast for Porto, by IPMA id (Braga 1030300, Lisbon 1110600)
+const fc = await get(`${base}/ipma-city-forecasts/latest.json`);
+const porto = fc.cities.find(c =&gt; c.id === 1131200);
+for (const d of porto.days)
+  console.log(d.date, `${d.t_min_c} to ${d.t_max_c}°C`, `${d.rain_prob_pct}% rain`, `type ${d.weather_type}`);
+console.log('Source: IPMA, read', porto.read_at);
+
+// 4. The nearest IPMA station that reported a temperature this hour, to a point (Braga)
+const obs = await get(`${base}/ipma-observations/latest.json`);
+const km = (a, b, c, d) =&gt; {
+  const p = Math.PI / 180;
+  const h = Math.sin((c - a) * p / 2) ** 2 + Math.cos(a * p) * Math.cos(c * p) * Math.sin((d - b) * p / 2) ** 2;
+  return 2 * 6371 * Math.asin(Math.sqrt(h));
+};
+const [lat, lon] = [41.5475, -8.4227];
+const near = obs.stations
+  .filter(s =&gt; s.reading &amp;&amp; s.reading.temp_c !== null)
+  .map(s =&gt; ({ ...s, km: km(lat, lon, s.lat, s.lon) }))
+  .sort((x, y) =&gt; x.km - y.km)[0];
+console.log(`${near.name}, ${near.km.toFixed(0)} km: ${near.reading.temp_c}°C at ${obs.hour_utc} (IPMA)`);
+
+// 5. Read a card: who publishes the data, how often it is read, and the terms
+const card = await get(`${base}/ipma-observations/card.json`);
+console.log(card.publisher, '|', card.schedule.cadence, '|', card.terms.summary, '|', card.terms.page);
+
+// 6. When did the collector last run, and did every request succeed?
+const reads = await get(`${base}/ipma-observations/reads.json`);
+const last = reads.runs[0];
+console.log(`last run ${last.at} to ${last.finished}: ${last.ok} ok, ${last.failed} failed`);
+
+// 7. Stale check: older than twice the card's cadence means say so, never guess
+const staleAfterMin = cadence =&gt; {
+  if (cadence === 'hourly') return 120;
+  const m = /every (\d+) hours?/.exec(cadence || '');
+  return m ? Number(m[1]) * 120 : 120;
+};
+const latest = await get(`${base}/ipma-city-forecasts/latest.json`);
+const fcCard = await get(`${base}/ipma-city-forecasts/card.json`);
+const ageMin = Math.round((Date.now() - Date.parse(latest.read_at)) / 60000);
+console.log(ageMin &gt; staleAfterMin(fcCard.schedule.cadence)
+  ? `Stale: read ${ageMin} min ago. Say so; do not show it as now.`
+  : `Fresh: read ${ageMin} min ago.`);</code></pre>
+
+<h3>curl and jq</h3>
+<pre><code># 1. List the sources: id, cadence, last read, status
+curl -s https://data.promptugal.news/api/v1/index.json \
+  | jq -r '.sources[] | [.id, .cadence, .read_at, .status] | @tsv'
+
+# 2. Faro now
+curl -s https://data.promptugal.news/api/v1/by-place/now/faro.json \
+  | jq '{station: .station.name, km: .station.km, hour: .station.reading.at,
+         temp_c: .station.reading.temp_c, rain_mm: .station.reading.rain_mm,
+         read_at: .reads.observations.at}'
+
+# 3. The forecast for Porto, by IPMA id
+curl -s https://data.promptugal.news/api/v1/ipma-city-forecasts/latest.json \
+  | jq -c '.cities[] | select(.id == 1131200) | .days[] | {date, t_min_c, t_max_c, rain_prob_pct, weather_type}'
+
+# 4. The nearest reporting station to a point (Braga; a flat approximation, close enough at these distances)
+curl -s https://data.promptugal.news/api/v1/ipma-observations/latest.json \
+  | jq -r --argjson lat 41.5475 --argjson lon -8.4227 '
+      .hour_utc as $h
+      | [.stations[] | select(.reading != null and .reading.temp_c != null)
+         | . + {km: ((((.lat - $lat) * 111.2) | . * .)
+                   + (((.lon - $lon) * 111.2 * ($lat * 3.14159265 / 180 | cos)) | . * .) | sqrt)}]
+      | min_by(.km) | "\(.name), \(.km | round) km: \(.reading.temp_c) C at \($h) (IPMA)"'
+
+# 5. Read a card and its terms
+curl -s https://data.promptugal.news/api/v1/ipma-observations/card.json \
+  | jq '{publisher, cadence: .schedule.cadence, terms: .terms.summary, page: .terms.page}'
+
+# 6. When did the collector last run?
+curl -s https://data.promptugal.news/api/v1/ipma-observations/reads.json \
+  | jq '.runs[0] | {at, finished, ok, failed}'
+
+# 7. Stale check (hourly source: stale after 120 minutes)
+curl -s https://data.promptugal.news/api/v1/ipma-city-forecasts/latest.json \
+  | jq -r '(now - (.read_at | fromdateiso8601)) / 60 | floor
+           | if . &gt; 120 then "stale: read \(.) min ago" else "fresh: read \(.) min ago" end'</code></pre>
+<p class="src">Each example was run against the live files on 18 November 2026 at about 18:10 UTC and returned data. Then, for example 4, the nearest station to Braga's centre that had reported a temperature was 16 km away; the screen says which station it uses and how far it is, because Braga's own stations do not always report.</p>
+
+<h2 id="card">How to read a card and its terms</h2>
+<p>Every source has a <code>card.json</code>. These are the fields of the <a href="https://data.promptugal.news/api/v1/ipma-observations/card.json">ipma-observations card</a>, as read on 18 November 2026:</p>
+<dl>
+<dt><code>id</code>, <code>title</code>, <code>what</code></dt><dd>The source's name in the addresses, its title, and one sentence on what it holds ("The latest hourly observation of each IPMA surface station: temperature, humidity, wind, rain, pressure and radiation, with the station's name and position").</dd>
+<dt><code>publisher</code></dt><dd>Who publishes the data: "IPMA, Instituto Português do Mar e da Atmosfera". Name them beside every figure you show.</dd>
+<dt><code>source_home</code>, <code>reader_page</code></dt><dd>The publisher's own file that the collector reads, and the publisher's page for people. Link the reader page when you show a value.</dd>
+<dt><code>schedule.cadence</code>, <code>schedule.how</code></dt><dd>How often the collector is meant to read the source ("hourly") and what runs it. Runs can be late; <code>reads.json</code> shows when they really happened.</dd>
+<dt><code>terms</code></dt><dd><code>terms.summary</code> in plain English; <code>terms.quote</code> in the publisher's own words, with <code>terms.quote_lang</code> ("pt"); <code>terms.page</code>, where the terms were read, and <code>terms.read_at</code>, when; <code>terms.republish</code> ("with conditions: attribution to IPMA; no profit-making purpose"); and <code>terms.open_question</code>, anything not yet settled.</dd>
+<dt><code>license</code></dt><dd>The licence of the file's structure: CC BY 4.0, held by PrompTugal.news. The values inside keep their source's own terms, which come first.</dd>
+<dt><code>api</code></dt><dd>The source's addresses: <code>latest</code>, <code>reads</code>, <code>card</code>, <code>openapi</code> and its <code>page</code>.</dd>
+<dt><code>vault</code>, <code>split</code>, <code>cost</code>, <code>since</code></dt><dd>Where the raw bytes are kept, who did what (code, agents, people), what a run costs, and when the source started. The card says no person has checked the values yet.</dd>
+</dl>
+<p><code>read_at</code> is not on the card: it is on <code>latest.json</code> (in <code>provenance</code>) and in the catalogue. It is the time the collector last read the source, in UTC. Show it with every figure.</p>
+
+<h2 id="terms">The terms</h2>
+<ul>
+<li><strong>IPMA</strong> (forecasts, observations, sea, UV, warnings): "free to copy and use for personal or public use if the use has no profit-making or offensive purpose; always name IPMA as the source." So: always name IPMA, beside the figure, and no profit-making use. This site has no ads, no payments and no profit-making purpose. A real campaign would be a profit-making use and would need IPMA's permission first.</li>
+<li><strong>adsb.lol</strong> (aircraft near Faro): its data is under the Open Database License (ODbL 1.0): attribution and share-alike, so anything derived from it stays under the ODbL. Coverage depends on volunteers' receivers, so an aircraft missing from the file may still have been there.</li>
+<li><strong>events-pt</strong> (the planning assistant's events): no reuse licence or terms page was found for any of its sources, so the card says reference use only, name the source, link to the event, and no AI training. The planning assistant shows only an event's name, date, venue and a link, and asks you to check with the organiser.</li>
+<li><strong>The files' structure</strong>: CC BY 4.0, PrompTugal.news. Every value keeps its source's terms.</li>
+</ul>
+<p class="src">Terms quoted from each source's <code>terms.summary</code> on its card, read 18 November 2026. IPMA's own terms page: <a href="https://api.ipma.pt/">api.ipma.pt</a>.</p>
+
+<h2 id="stale">Stale or missing data: what the screen does</h2>
+<ul>
+<li><strong>Every value has a time.</strong> Beside each live figure the screen shows its source, publisher and the time it was read.</li>
+<li><strong>Stale means older than twice the card's cadence</strong>: two hours for the hourly IPMA and adsb.lol files, twelve hours for events-pt. That limit is this site's choice, not the publishers'. A stale value is not shown as now: the screen says how old it is.</li>
+<li><strong>Missing means say so.</strong> A file that does not answer within 8 seconds, answers with an error or holds no value is named on the page as unread. The screen never guesses a value and never fills a gap with a typical one.</li>
+<li><strong>No Algarve reading, no advert.</strong> If the Algarve file cannot be read, the screen says a real screen would pause now.</li>
+<li><strong>A failed run keeps the last good file.</strong> data.promptugal.news keeps a source's last good <code>latest.json</code> when a read fails, and <code>reads.json</code> shows the failure (<code>runs[0].failed</code> above 0). That is why the screen checks <code>read_at</code> rather than trusting that a file is new.</li>
+</ul>
+
+<h2 id="build">How to build a screen like this one</h2>
+<p>This is how this simulation is built, offered as a pattern, not as advice for a real campaign.</p>
+<ol>
+<li><strong>100% client side.</strong> The site is static files (HTML, CSS, JavaScript) on a static host. There is no server, no key and no database. State (the chosen place, city and London weather) lives in the address bar or the browser's local storage.</li>
+<li><strong>Fetch in the browser.</strong> When the page opens, the browser reads the files above from data.promptugal.news, with a time limit, once per address per page load. Nothing is copied into the site at build time, so the figures are as fresh as the collector's last run.</li>
+<li><strong>The three phases</strong> of Dinis Cruz's white paper, which the screen runs: first, the Algarve now, with a simple message; second, the weather compared with here for the next days, with an indicative flight time and price; third, how soon you could be there, with a QR code to a planning assistant. On this site the flight times and prices are invented examples, and the planning assistant is a simulation: scripted answers, no live model.</li>
+<li><strong>Sun computation.</strong> Sunrise, sunset and the sun's height are computed in the browser from the date and each place's position, with the NOAA solar calculator's equations (after Jean Meeus, "Astronomical Algorithms"). No file is read for this. The screen uses it for the darker test in the decision rule below, and for day and night in the drawing.</li>
+<li><strong>The decision rule.</strong> A real screen would run the advert when here is colder (by 3°C or more), wetter (raining here, dry there) or darker (the sun has set here and not yet there, or daylight ends at least 30 minutes earlier here) than the Algarve place. When the Algarve is wet too, it would switch message to the next drier day in IPMA's forecast (chance of rain under 40%), or pause if there is none. With no Algarve reading, it pauses. The screen says, in words, which of these it would do and why.</li>
+<li><strong>London is simulated until a source exists.</strong> data.promptugal.news has no London weather (checked 18 November 2026). A control beside the screen sets London's weather, time and station, and every London figure is labelled "simulated". Porto, Braga and Lisbon are read live from IPMA and labelled "live".</li>
+<li><strong>Cameras only through live.promptugal.news.</strong> The white paper's live view would come from public cameras. This site will show a camera only once <a href="https://live.promptugal.news/">live.promptugal.news</a> offers one with its terms. On 18 November 2026 that site said "First version coming" and offered none, so the screen shows a drawing, marked "drawing, not a camera".</li>
+<li><strong>Label everything.</strong> "live" for values read from a source, "simulated" for values the visitor sets, "invented example" for flights, prices and times, "drawing, not a camera" for the scene, and "simulation: scripted answers, no live model" for the planning assistant.</li>
+</ol>
+<p>What a real screen would need first, and this site does not have: permission from IPMA for a profit-making use; a real London weather source; each camera operator's permission; a real flight and price source with its own terms; and a screen, a site for it and a buyer, none of which exist.</p>
+
+<h2 id="warning">Not a warning service</h2>
+<p class="status">Nothing on this site is a warning service or safety advice. For weather warnings and safety in Portugal, follow IPMA (<a href="https://www.ipma.pt/en/">ipma.pt</a>) and ANEPC, the national civil protection authority.</p>
+
+<p class="note">Simulation. This page describes a demonstration: no screen, campaign or booking is real. The data sources, their addresses and their terms are real, as read on 18 November 2026. Idea: Dinis Cruz.</p>
+</main>
+<script type="module" src="/assets/js/use-the-data.js"></script>
+<!--FOOTER-->
+</body>
+</html>
