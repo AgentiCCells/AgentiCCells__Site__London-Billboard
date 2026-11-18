@@ -7,7 +7,7 @@
 // developer.london-billboard@AgentiCCells.dinis, 2026-11-18. Code Apache-2.0.
 
 import * as D from './data.js';
-import { normaliseParams, journey } from './screen.js';
+import { normaliseParams, journey, fmtDur } from './screen.js';
 
 const esc = D.esc;
 const log = document.getElementById('plan-log');
@@ -87,7 +87,7 @@ const INTENTS = [
   } },
   { id: 'getthere', label: 'How do I get there?', re: /get there|how.*(go|get|travel)|flight|fly|plane|train|airport|price|cost|cheap|book/i, run: async () => {
     const j = journey(p, place, new Date());
-    const legs = j.legs.map(([w, m]) => `<li>${esc(w)}: about ${m >= 60 ? `${Math.floor(m / 60)}h${m % 60 ? String(m % 60).padStart(2, '0') : ''}` : `${m} min`}</li>`).join('');
+    const legs = j.legs.map(l => `<li>${esc(l.what)}: about ${esc(fmtDur(l.min))}</li>`).join('');
     return { html: `<p>From ${esc(fromWords)} to ${esc(place.label)}, for example ${INV}:</p><ol>${legs}</ol><p>Leaving now, the next example ${j.route === 'train' ? 'train' : 'flight'} would be ${j.day === 'tomorrow' ? 'tomorrow ' : ''}at ${esc(D.clock(j.departs, j.tz))}, and you would be in ${esc(place.label)} by ${esc(D.clock(j.there, D.PORTUGAL_TZ))}. These times and the departures are invented; no timetable or fare was looked up, and no booking can be made here.</p>` };
   } },
   { id: 'events', label: 'What is on?', re: /what.*on|event|concert|theatre|exhibition|show|museum|do there/i, run: async () => {

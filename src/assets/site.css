@@ -37,11 +37,11 @@ code{font-family:var(--mono);font-size:.9em}
 
 /* header */
 .site-head{border-bottom:1px solid var(--line)}
-.site-head .bar{display:flex;align-items:center;justify-content:space-between;gap:var(--s4);max-width:76rem;margin:0 auto;padding:var(--s3) var(--s4)}
+.site-head .bar{display:flex;align-items:center;justify-content:space-between;gap:var(--s4);max-width:90rem;margin:0 auto;padding:var(--s3) var(--s4)}
 .brand{display:flex;align-items:center;gap:var(--s2);font-weight:700;font-size:1.0625rem;color:var(--ink);text-decoration:none;min-width:0}
 .brand small{display:block;font-weight:400;font-size:.75rem;color:var(--ink-2)}
 .brand svg{flex:none;color:var(--accent)}
-.nav ul{display:flex;flex-wrap:wrap;gap:var(--s1) var(--s4);list-style:none;margin:0;padding:0;font-size:.9375rem;justify-content:flex-end}
+.nav ul{max-width:none;display:flex;flex-wrap:wrap;gap:var(--s1) var(--s4);list-style:none;margin:0;padding:0;font-size:.9375rem;justify-content:flex-end}
 .nav a{display:inline-block;color:var(--ink);text-decoration:none;white-space:nowrap;padding:var(--s1) 0;border-bottom:2px solid transparent}
 .nav a:hover{border-bottom-color:var(--line)}
 .nav a[aria-current]{border-bottom-color:var(--accent)}
@@ -83,13 +83,15 @@ blockquote{margin:var(--s4) 0;padding:.2rem 0 .2rem var(--s4);border-left:4px so
 .status.fail{border:2px solid var(--fail);background:var(--surface)}
 .status.empty{border:1px dashed var(--line);color:var(--ink-2)}
 
-/* the main screen page: .stage holds the screen, centred; .panel holds the controls, beside it on
-   wide screens and under it below 900px. Use them as children of <main class="screen-page"> (or
-   any <main> whose direct child is a .stage). */
-.screen-page,main:has(>.stage){max-width:90rem;display:grid;grid-template-columns:minmax(0,1fr) minmax(18rem,24rem);gap:var(--s5);align-items:start;padding-top:var(--s4)}
+/* the main screen page: .stage holds the screen, its controls and the decision line; .panel holds the
+   settings. Wide windows: the two sit side by side as one centred group with one gap, the stage column
+   exactly as wide as the screen (screen.js sets the frame's width from the window height left below the
+   header). At 900px and under: one column, the panel under the screen. Use them as children of
+   <main class="screen-page"> (or any <main> whose direct child is a .stage). */
+.screen-page,main:has(>.stage){max-width:90rem;display:grid;grid-template-columns:auto minmax(18rem,24rem);justify-content:center;column-gap:var(--s6);row-gap:var(--s5);align-items:start;padding-top:var(--s4)}
 .screen-page>*,main:has(>.stage)>*{min-width:0}
-.screen-page>:not(.stage):not(.panel),main:has(>.stage)>:not(.stage):not(.panel){grid-column:1/-1}
-.stage{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;min-height:60vh;min-width:0;overflow:hidden}
+.screen-page>:not(.stage):not(.panel),main:has(>.stage)>:not(.stage):not(.panel){grid-column:1/-1;contain:inline-size}
+.stage{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;min-width:0}
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:var(--s4);position:sticky;top:var(--s4);max-height:calc(100vh - 2*var(--s4));overflow:auto}
 .panel h2{font-size:1.125rem;margin:0 0 var(--s3)}
 .panel h3{font-size:1rem;margin:var(--s4) 0 var(--s2)}
@@ -97,7 +99,7 @@ blockquote{margin:var(--s4) 0;padding:.2rem 0 .2rem var(--s4);border-left:4px so
 .panel label{display:block;margin:var(--s2) 0 var(--s1)}
 .panel select,.panel input:not([type="radio"]):not([type="checkbox"]){width:100%}
 .panel .radio label,.panel label.inline{display:inline-flex;align-items:center;gap:var(--s1);font-weight:400;margin-right:var(--s3)}
-@media (max-width:900px){.screen-page,main:has(>.stage){grid-template-columns:minmax(0,1fr)}.panel{position:static;max-height:none}.stage{min-height:0}}
+@media (max-width:900px){.screen-page,main:has(>.stage){grid-template-columns:minmax(0,1fr);justify-content:stretch}.panel{position:static;max-height:none}}
 
 /* footer */
 .site-foot{border-top:1px solid var(--line);margin-top:var(--s7);padding:var(--s5) var(--s4);font-size:.8125rem;color:var(--ink-2)}

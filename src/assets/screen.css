@@ -3,8 +3,11 @@
    Restyle it through the custom properties on .screen, or a .theme-<name> class (SCREEN.md).
    developer.london-billboard@AgentiCCells.dinis, 2026-11-18. Code Apache-2.0. */
 
-.screen-frame { --frame-ink: inherit; display: flex; flex-direction: column; align-items: center; gap: .6rem; width: 100%; max-width: 100%; outline: none; }
+/* The frame is as wide as the screen (--screen-w, set by screen.js), and never narrower than the controls need. */
+.screen-frame { --frame-ink: inherit; display: flex; flex-direction: column; align-items: center; gap: .6rem; width: max(var(--screen-w, 100%), 20rem); max-width: 100%; outline: none; }
 .screen-fit { position: relative; overflow: hidden; border-radius: 10px; box-shadow: 0 0 0 6px #111, 0 10px 30px rgba(0,0,0,.35); background: #111; max-width: 100%; }
+/* A visible focus ring around the screen frame, outside its dark edge, in the site's focus colour (both schemes). */
+.screen-fit:has(.screen:focus-visible) { outline: 3px solid var(--focus-ring, var(--sun, #b5650b)); outline-offset: 4px; }
 
 .screen {
   /* The theme hook: override these on .theme-<name>. */
@@ -18,42 +21,59 @@
   --screen-panel-ink: #ffffff;
   --screen-here: #9fb3c8;
   --screen-alg: #ffd36b;
-  --screen-smallprint-bg: rgba(0,0,0,.62);
+  --screen-smallprint-bg: rgba(0,0,0,.72);
+  /* A dark backing behind any text over the scene (72% or more keeps white 7.3 to 1 and the accent 5.1 to 1 over white). */
+  --screen-head-bg: rgba(10,22,38,.72);
+  /* The darkening of the scene in phases 2 and 3. */
+  --screen-veil: linear-gradient(rgba(5,12,25,.6), rgba(5,12,25,.8));
   --screen-smallprint-ink: #f2f2f2;
   --screen-ribbon-bg: #fbe7a1;
   --screen-ribbon-ink: #3a2e00;
-  --tag-live-bg: #1f7a3f; --tag-live-ink: #fff;
-  --tag-sim-bg: #7a3fb0; --tag-sim-ink: #fff;
-  --tag-inv-bg: #a13d1a; --tag-inv-ink: #fff;
-  --tag-stale-bg: #ffd166; --tag-stale-ink: #3a2e00;
-  --tag-missing-bg: #555; --tag-missing-ink: #fff;
-  --tag-computed-bg: #2d5f8a; --tag-computed-ink: #fff;
+  /* Tags: colour and shape. live is filled with a leading dot; simulated is a solid outline; invented
+     example a dashed outline; computed has square corners and a double outline; example is filled with
+     stripes and square corners; may be out of date and missing are filled (yellow, grey). */
+  --tag-live-bg: #1f7a3f; --tag-live-ink: #fff; --tag-live-border: #1f7a3f; --tag-live-dot: currentColor;
+  --tag-sim-bg: rgba(122,63,176,.35); --tag-sim-ink: #fff; --tag-sim-border: #c9a2ee; --tag-sim-border-style: solid;
+  --tag-inv-bg: rgba(161,61,26,.35); --tag-inv-ink: #fff; --tag-inv-border: #f0a080; --tag-inv-border-style: dashed;
+  --tag-computed-bg: rgba(45,95,138,.35); --tag-computed-ink: #fff; --tag-computed-border: #9cc7ec; --tag-computed-border-style: double; --tag-computed-radius: 0;
+  --tag-example-bg: repeating-linear-gradient(135deg, #5a4a00 0 .3em, #3a3000 .3em .6em); --tag-example-ink: #fff; --tag-example-border: #ffd36b; --tag-example-radius: 0;
+  --tag-stale-bg: #ffd166; --tag-stale-ink: #3a2e00; --tag-stale-border: #ffd166;
+  --tag-missing-bg: #555; --tag-missing-ink: #fff; --tag-missing-border: #555;
   position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0;
   font-family: var(--screen-font); color: var(--screen-ink); background: #0b1428; overflow: hidden;
   line-height: 1.2; text-align: left;
 }
-.screen:focus-visible { outline: 8px solid var(--screen-accent); outline-offset: -8px; }
+.screen:focus-visible { outline: none; }
 .screen-scene, .screen-layer { position: absolute; inset: 0; }
 .screen-scene svg { width: 100%; height: 100%; display: block; }
 .screen-layer { display: flex; flex-direction: column; }
 .screen p, .screen h1, .screen ol, .screen ul { margin: 0; max-width: none; }
 .screen th, .screen td, .screen caption { font-size: inherit; }
 
-.screen-phase { flex: 1; display: flex; flex-direction: column; padding: 110px 72px 40px; gap: 36px; }
+.screen-phase { flex: 1; min-height: 0; display: flex; flex-direction: column; padding: 64px 72px 32px; gap: 32px; }
+.is-paused-decision .screen-phase { padding-top: 140px; }
+.screen-head { background: var(--screen-head-bg); border-radius: 28px; padding: 28px 40px 32px; margin: 0 -16px; }
 .screen-headline { font-family: var(--screen-headline-font); font-size: 92px; line-height: 1.05; font-weight: 800; text-shadow: var(--screen-shadow); letter-spacing: -.01em; }
 .screen-accent { color: var(--screen-accent); }
 
 /* Phase 1: the Algarve now */
-.phase-now .screen-now { margin-top: auto; margin-bottom: 40px; background: var(--screen-panel); color: var(--screen-panel-ink); padding: 40px 48px; border-radius: 28px; }
+.phase-now .screen-now { margin-top: auto; background: var(--screen-panel); color: var(--screen-panel-ink); padding: 32px 44px 36px; border-radius: 28px; display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 28px; }
+.screen-now > :not(.screen-place):not(.screen-time) { flex-basis: 100%; }
 .screen-place { font-size: 64px; font-weight: 800; }
-.screen-time { font-size: 40px; color: var(--screen-ink-soft); margin-top: 6px !important; }
-.screen-temp { font-size: 200px; font-weight: 800; line-height: 1; margin: 18px 0 8px !important; color: var(--screen-accent); }
-.screen-temp .tag { font-size: 34px; vertical-align: middle; }
-.screen-words { font-size: 42px; }
-.screen-meta { font-size: 28px; color: var(--screen-ink-soft); margin-top: 18px !important; line-height: 1.35; }
+.screen-time { font-size: 40px; color: var(--screen-ink-soft); }
+.screen-temp { font-size: 180px; font-weight: 800; line-height: 1; margin: 12px 0 4px !important; color: var(--screen-accent); white-space: nowrap; letter-spacing: -.02em; }
+.screen-temp .tag { font-size: 40px; vertical-align: middle; letter-spacing: 0; }
+.screen-meta { font-size: 28px; color: var(--screen-ink-soft); margin-top: 10px !important; line-height: 1.35; }
+.screen-facts { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 36px; margin: 22px 0 0; }
+.screen-fact { min-width: 0; }
+.screen-fact[data-key="forecast"] { grid-column: 1 / -1; }
+.screen-fact dt { font-size: 28px; color: var(--screen-ink-soft); font-weight: 600; }
+.screen-fact dd { margin: 0; font-size: 40px; font-weight: 700; line-height: 1.25; }
+.screen-fact dd .tag { font-size: 28px; vertical-align: middle; }
+.fact-src { display: block; font-size: 26px; font-weight: 400; color: var(--screen-ink-soft); line-height: 1.3; margin-top: 4px; }
 
 /* Phase 2: the comparison */
-.phase-compare { background: linear-gradient(rgba(5,12,25,.55), rgba(5,12,25,.75)); }
+.phase-compare, .phase-journey { background: var(--screen-veil); }
 .screen-vs { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
 .screen-side { background: var(--screen-panel); color: var(--screen-panel-ink); border-radius: 28px; padding: 32px 36px; border-top: 14px solid var(--screen-here); }
 .side-alg { border-top-color: var(--screen-alg); }
@@ -63,7 +83,11 @@
 .side-alg .side-temp { color: var(--screen-alg); }
 .side-words { font-size: 38px; }
 .screen-days { width: 100%; border-collapse: collapse; background: var(--screen-panel); color: var(--screen-panel-ink); border-radius: 28px; overflow: hidden; font-size: 36px; }
-.screen-days caption { caption-side: top; text-align: left; font-size: 30px; padding: 0 0 12px; color: var(--screen-ink-soft); }
+.screen-days caption { caption-side: top; text-align: left; font-size: 30px; padding: 16px 24px 4px; color: var(--screen-panel-ink); background: var(--screen-panel); }
+.screen-days tr.is-dry th, .screen-days tr.is-dry td { font-weight: 800; }
+.screen-days tr.is-dry th { box-shadow: inset 6px 0 0 var(--screen-accent); }
+.day-dry { font-size: 26px; font-weight: 700; color: var(--screen-accent); }
+.screen-days thead .tag { font-size: 24px; }
 .screen-days th, .screen-days td { padding: 20px 24px; text-align: left; vertical-align: top; border-bottom: 2px solid rgba(255,255,255,.12); }
 .screen-days thead th { font-size: 30px; color: var(--screen-ink-soft); font-weight: 600; }
 .screen-days tbody th { font-weight: 700; white-space: nowrap; }
@@ -71,13 +95,16 @@
 .screen-sunline strong { color: var(--screen-accent); }
 
 /* Phase 3: the journey */
-.phase-journey { background: linear-gradient(rgba(5,12,25,.35), rgba(5,12,25,.8)); }
 .phase-journey .screen-headline { font-size: 104px; }
 .screen-itinerary { background: var(--screen-panel); color: var(--screen-panel-ink); border-radius: 28px; padding: 36px 44px; font-size: 36px; line-height: 1.35; }
 .itin-title { font-size: 34px; font-weight: 700; margin-bottom: 12px !important; }
 .itin-title .tag { font-size: 28px; }
 .itin-depart { margin-bottom: 10px !important; }
-.screen-itinerary ol { margin: 0; padding-left: 1.3em; font-size: 32px; }
+.screen-itinerary ol { margin: 0; padding: 0; list-style: none; font-size: 32px; }
+.screen-itinerary li { display: grid; grid-template-columns: 110px 1fr auto; gap: 18px; padding: 6px 0; border-top: 2px solid rgba(255,255,255,.14); }
+.leg-time { font-weight: 700; font-variant-numeric: tabular-nums; }
+.leg-dur { color: var(--screen-ink-soft); white-space: nowrap; }
+.itin-clock { font-weight: 400; font-size: 30px; margin-left: 12px; }
 .screen-cta { margin-top: auto; display: flex; align-items: center; gap: 44px; background: var(--screen-panel); border-radius: 28px; padding: 32px 40px; }
 .screen-qr { width: 330px; height: 330px; flex: none; border-radius: 12px; }
 .cta-text { font-size: 72px; font-weight: 800; line-height: 1.1; }
@@ -87,37 +114,48 @@
 .screen-dots { display: flex; gap: 18px; justify-content: center; padding: 0 0 18px; }
 .screen-dots span { width: 22px; height: 22px; border-radius: 50%; background: rgba(255,255,255,.4); }
 .screen-dots span.on { background: var(--screen-ink); }
-.screen-smallprint { background: var(--screen-smallprint-bg); color: var(--screen-smallprint-ink); font-size: 25px; line-height: 1.4; padding: 22px 40px 26px; }
+.screen-smallprint { background: var(--screen-smallprint-bg); color: var(--screen-smallprint-ink); font-size: 26px; line-height: 1.35; padding: 16px 48px 20px; }
+.screen-smallprint p { display: block; }
+.screen-smallprint .tag { font-size: 24px; }
+.sp-example { color: #fff; }
 .screen-ribbon { position: absolute; top: 0; left: 0; right: 0; padding: 18px 40px; font-size: 34px; font-weight: 700; background: var(--screen-ribbon-bg); color: var(--screen-ribbon-ink); z-index: 2; }
 .screen :where(.tag) { display: inline-block; padding: .1em .45em; border-radius: .35em; font-weight: 700; font-size: .85em; line-height: 1.2; text-shadow: none; }
 
-/* Tags (also used in the panel) */
-.tag { display: inline-block; padding: .05em .4em; border-radius: .3em; font-size: .78em; font-weight: 700; line-height: 1.3; white-space: nowrap; }
-.tag-live { background: var(--tag-live-bg, #1f7a3f); color: var(--tag-live-ink, #fff); }
-.tag-sim { background: var(--tag-sim-bg, #7a3fb0); color: var(--tag-sim-ink, #fff); }
-.tag-inv { background: var(--tag-inv-bg, #a13d1a); color: var(--tag-inv-ink, #fff); }
-.tag-stale { background: var(--tag-stale-bg, #ffd166); color: var(--tag-stale-ink, #3a2e00); }
+/* Tags (also used in the panel, outside .screen, where the fallbacks below apply).
+   Shapes as well as colours, so they can be told apart in greyscale (see the custom properties on .screen). */
+.tag { display: inline-block; padding: .05em .4em; border-radius: .3em; font-size: .78em; font-weight: 700; line-height: 1.3; white-space: nowrap; border: .12em solid transparent; }
+.tag-live { background: var(--tag-live-bg, #1f7a3f); color: var(--tag-live-ink, #fff); border-color: var(--tag-live-border, #1f7a3f); }
+.tag-live::before { content: ""; display: inline-block; width: .5em; height: .5em; border-radius: 50%; background: var(--tag-live-dot, currentColor); margin-right: .35em; vertical-align: .08em; }
+.tag-sim { background: var(--tag-sim-bg, transparent); color: var(--tag-sim-ink, var(--sim, #8a4b00)); border: .12em var(--tag-sim-border-style, solid) var(--tag-sim-border, currentColor); }
+.tag-inv { background: var(--tag-inv-bg, transparent); color: var(--tag-inv-ink, var(--inv, #5b4a8c)); border: .12em var(--tag-inv-border-style, dashed) var(--tag-inv-border, currentColor); }
 /* computed: a value worked out here (the sunset, from the NOAA equations), not read from a source */
-.tag-computed { background: var(--tag-computed-bg, #2d5f8a); color: var(--tag-computed-ink, #fff); }
-.tag-missing { background: var(--tag-missing-bg, #555); color: var(--tag-missing-ink, #fff); }
+.tag-computed { background: var(--tag-computed-bg, transparent); color: var(--tag-computed-ink, var(--accent, #0b5c8a)); border: .22em var(--tag-computed-border-style, double) var(--tag-computed-border, currentColor); border-radius: var(--tag-computed-radius, 0); }
+/* example: a fixed value in a preview or screenshot, never a reading */
+.tag-example { background: var(--tag-example-bg, repeating-linear-gradient(135deg, #fff3c4 0 .3em, #ffe08a .3em .6em)); color: var(--tag-example-ink, #332600); border: .12em solid var(--tag-example-border, #8a6d00); border-radius: var(--tag-example-radius, 0); }
+.tag-stale { background: var(--tag-stale-bg, #ffd166); color: var(--tag-stale-ink, #3a2e00); border-color: var(--tag-stale-border, #ffd166); }
+.tag-missing { background: var(--tag-missing-bg, #555); color: var(--tag-missing-ink, #fff); border-color: var(--tag-missing-border, #555); }
 
-/* The scene's movement */
-.scene-drift { animation: scene-drift 120s linear infinite alternate; }
-@keyframes scene-drift { from { transform: translateX(-60px); } to { transform: translateX(60px); } }
-.scene-rain { animation: scene-rain .7s linear infinite; }
-@keyframes scene-rain { from { transform: translate(0, -46px); } to { transform: translate(-10px, 0); } }
-.screen-phase { animation: screen-in .5s ease-out; }
-@keyframes screen-in { from { opacity: 0; } to { opacity: 1; } }
-@media (prefers-reduced-motion: reduce) {
-  .scene-drift, .scene-rain, .screen-phase { animation: none; }
+/* The scene's movement and the fade between phases: only when the visitor allows motion. */
+@media (prefers-reduced-motion: no-preference) {
+  .scene-drift { animation: scene-drift 120s linear infinite alternate; }
+  .scene-rain { animation: scene-rain .7s linear infinite; }
+  .screen-phase { animation: screen-in .5s ease-out; }
 }
+@keyframes scene-drift { from { transform: translateX(-60px); } to { transform: translateX(60px); } }
+@keyframes scene-rain { from { transform: translate(0, -46px); } to { transform: translate(-10px, 0); } }
+@keyframes screen-in { from { opacity: 0; } to { opacity: 1; } }
 
 /* Controls and the decision line, outside the screen */
-.screen-controls { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: .5rem; }
-.screen-controls button { font: inherit; font-size: .95rem; padding: .45rem .9rem; border-radius: .4rem; border: 1px solid currentColor; background: transparent; color: inherit; cursor: pointer; min-height: 44px; min-width: 44px; }
-.screen-controls button:focus-visible { outline: 3px solid #e0a100; outline-offset: 2px; }
-.screen-phase-label { font-size: .9rem; opacity: .8; }
-.screen-decision { margin: 0; max-width: 40rem; font-size: .95rem; line-height: 1.45; padding: .6rem .8rem; border-left: 4px solid #a13d1a; background: rgba(161,61,26,.08); }
+.screen-controls { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: .4rem; }
+.screen-controls button { font: inherit; font-size: .9375rem; padding: .4rem .7rem; border-radius: .4rem; border: 1px solid currentColor; background: transparent; color: inherit; cursor: pointer; min-height: 44px; min-width: 44px; }
+.screen-controls button:focus-visible { outline: 3px solid var(--sun, #b5650b); outline-offset: 2px; }
+.screen-phase-label { font-size: .875rem; color: var(--ink-2, inherit); white-space: nowrap; }
+/* The decision line: the verdict word carries the meaning; the rule and tint repeat it.
+   run: --live; switch: --warn-bar on --warn-bg; pause: --fail. Text is always --ink. */
+.screen-decision { margin: 0; width: 100%; max-width: none; font-size: .8125rem; line-height: 1.4; padding: .4rem .6rem; border-left: 4px solid var(--ink-2, #4f565e); background: var(--surface, #fff); color: var(--ink, #1c1f23); }
+.screen-decision[data-mode="run"] { border-left-color: var(--live, #1d6b3a); background: color-mix(in srgb, var(--live, #1d6b3a) 9%, var(--bg, #f7f7f4)); }
+.screen-decision[data-mode="switch"] { border-left-color: var(--warn-bar, #8a6d00); background: var(--warn-bg, #fff3c4); }
+.screen-decision[data-mode="pause"] { border-left-color: var(--fail, #a1261a); background: color-mix(in srgb, var(--fail, #a1261a) 8%, var(--bg, #f7f7f4)); }
 
 /* The panel */
 .control fieldset { border: 1px solid rgba(127,127,127,.4); border-radius: .5rem; margin: 0 0 1rem; padding: .6rem .9rem .9rem; }
@@ -135,9 +173,20 @@
 .provenance-list li { margin-bottom: .6rem; }
 .provenance-terms { font-size: .85rem; }
 
-/* ?kiosk=1: only the screen, the whole window */
-.is-kiosk body { margin: 0; background: #000; }
-.is-kiosk body > :not(main), .is-kiosk main > :not(.stage), .is-kiosk .stage > :not(#billboard-screen) { display: none !important; }
+.control-example { border-left: 4px solid var(--warn-bar, #8a6d00); background: var(--warn-bg, #fff3c4); padding: .4rem .8rem; }
+
+/* ?kiosk=1: the screen as large as the window allows, and the simulation band, word for word: beside
+   the screen in a landscape window, a strip above it in a portrait one. Nothing else. */
+.is-kiosk body { margin: 0; background: #000; color: #d9d9d9; min-height: 100vh; }
+.is-kiosk body > :not(main):not(.band), .is-kiosk main > :not(.stage), .is-kiosk .stage > :not(#billboard-screen) { display: none !important; }
 .is-kiosk main, .is-kiosk .stage { margin: 0 !important; padding: 0 !important; max-width: none !important; display: block !important; }
-.is-kiosk .screen-frame { height: 100vh; justify-content: center; }
+.is-kiosk .screen-frame { width: 100%; max-width: none; justify-content: center; align-items: center; }
 .is-kiosk .screen-fit { box-shadow: none; border-radius: 0; }
+.is-kiosk .screen-fit:has(.screen:focus-visible) { outline-color: #f2b35e; outline-offset: -3px; }
+.is-kiosk .band { border: 0; background: #000; color: #d9d9d9; font-size: 15px; line-height: 1.5; text-align: left; padding: 12px 16px; }
+.is-kiosk .band a { color: #d9d9d9; }
+.is-kiosk.is-idle, .is-kiosk.is-idle * { cursor: none; }
+@media (orientation: landscape) and (min-aspect-ratio: 5/4) {
+  .is-kiosk .band { position: fixed; left: 0; top: 0; bottom: 0; margin: auto 0; height: fit-content; width: min(22rem, calc((100vw - 56.25vh) / 2 - 16px)); padding: 0 24px; }
+  .is-kiosk .screen-frame { height: 100vh; }
+}

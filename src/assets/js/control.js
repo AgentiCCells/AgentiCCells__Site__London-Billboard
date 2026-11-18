@@ -6,7 +6,7 @@
 // developer.london-billboard@AgentiCCells.dinis, 2026-11-18. Code Apache-2.0.
 
 import * as D from './data.js';
-import { buildState, mountScreen, normaliseParams, DEFAULTS } from './screen.js';
+import { buildState, mountScreen, normaliseParams, fitWindow, DEFAULTS, THEMES, EXAMPLE_NOTE } from './screen.js';
 
 const esc = D.esc;
 const KEY = 'london-billboard:screen:v1';
@@ -37,12 +37,13 @@ export function writeParams(p) {
 
 // ---------- the panel ----------
 const opt = (v, label, cur) => `<option value="${esc(v)}"${String(v) === String(cur) ? ' selected' : ''}>${esc(label)}</option>`;
-function formHtml(p) {
+function formHtml(p, example = false) {
+  const live = example ? '<span class="tag tag-example">example</span>' : '<span class="tag tag-live">live</span>';
   const hours = [opt('live', 'Live clock', p.hour === null ? 'live' : '')].concat(Array.from({ length: 24 }, (_, h) => opt(h, `${String(h).padStart(2, '0')}:00`, p.hour))).join('');
   const w = D.LONDON_WEATHER[p.weather];
   return `<form class="control" aria-label="Screen settings" onsubmit="return false">
     <fieldset class="control-from"><legend>Screen location</legend>
-      ${Object.values(D.HERE).map(h => `<label class="control-radio"><input type="radio" name="from" value="${h.id}"${p.from === h.id ? ' checked' : ''}> ${esc(h.label)} <span class="tag ${h.live ? 'tag-live' : 'tag-sim'}">${h.live ? 'live' : 'simulated'}</span></label>`).join('')}
+      ${Object.values(D.HERE).map(h => `<label class="control-radio"><input type="radio" name="from" value="${h.id}"${p.from === h.id ? ' checked' : ''}> ${esc(h.label)} ${h.live ? live : '<span class="tag tag-sim">simulated</span>'}</label>`).join('')}
     </fieldset>
     <fieldset class="control-london"${p.from === 'london' ? '' : ' hidden'}><legend>London <span class="tag tag-sim">simulated</span></legend>
       <p class="control-note">No live London source is used (none exists on 2026-11-18): every London value is set by you.</p>
@@ -53,7 +54,7 @@ function formHtml(p) {
       <label>Station (simulated) <select name="station">${Object.entries(D.STATIONS).map(([k, v]) => opt(k, v, p.station)).join('')}</select></label>
     </fieldset>
     <div class="control-here-live"${p.from === 'london' ? ' hidden' : ''} aria-live="polite"></div>
-    <fieldset class="control-to"><legend>Algarve place <span class="tag tag-live">live</span></legend>
+    <fieldset class="control-to"><legend>Algarve place ${live}</legend>
       <label>Show <select name="to">${Object.values(D.PLACES).map(pl => opt(pl.id, pl.label, p.to)).join('')}</select></label>
     </fieldset>
     <p class="control-share"><a class="control-link" href="">Link to this view</a> <span class="control-note">(the settings are in the address; this browser also remembers them)</span></p>
@@ -84,7 +85,13 @@ function readTimes(s) {
     'adsb-faro': s.aircraft?.read_at || null,
   };
 }
+function exampleProvenanceHtml(s) {
+  return `<p class="control-example"><strong>${esc(EXAMPLE_NOTE)}</strong> <span class="tag tag-example">example</span></p>
+    <p>This view uses fixed, made-up values (the address has <code>example=1</code>), so previews and screenshots do not depend on the network. Nothing was read from data.promptugal.news, and no value on the screen is live: each one that would be read live is tagged "example". ${s.params.from === 'london' ? 'London\'s values are set by you (simulated); ' : ''}journeys, flights and times are invented examples; sunset times are computed in your browser (NOAA equations).</p>
+    <p><a href="${esc(location.pathname)}">Show the live screen</a></p>`;
+}
 function provenanceHtml(s) {
+  if (s.example) return exampleProvenanceHtml(s);
   const times = readTimes(s);
   const now = Date.now();
   const rows = SOURCES.map(id => {
@@ -118,7 +125,7 @@ function provenanceHtml(s) {
 // mountControl(panelEl, screenEl, opts) -> { params, screen, refresh }
 export async function mountControl(panelEl, screenEl, opts = {}) {
   let p = readParams();
-  panelEl.innerHTML = formHtml(p);
+  panelEl.innerHTML = formHtml(p, !!opts.example);
   const form = panelEl.querySelector('form');
   const provBody = panelEl.querySelector('.provenance-body');
   const hereLive = panelEl.querySelector('.control-here-live');
@@ -129,13 +136,13 @@ export async function mountControl(panelEl, screenEl, opts = {}) {
     writeParams(p);
     link.href = location.href;
     screenEl.setAttribute('aria-busy', 'true');
-    const s = await buildState(p);
+    const s = await buildState(p, { example: !!opts.example });
     if (my !== seq) return;
     screenEl.removeAttribute('aria-busy');
     if (!screen) screen = mountScreen(screenEl, s, opts.screen || {});
     else screen.update(s);
     provBody.innerHTML = provenanceHtml(s);
-    hereLive.innerHTML = p.from === 'london' ? '' : hereLiveHtml(s);
+    hereLive.innerHTML = p.from === 'london' ? '' : s.example ? `<p>${esc(D.HERE[p.from].label)}: example values, not a reading <span class="tag tag-example">example</span>.</p>` : hereLiveHtml(s);
   }
   form.addEventListener('input', e => {
     const f = e.target.name;
@@ -154,15 +161,46 @@ export async function mountControl(panelEl, screenEl, opts = {}) {
 }
 
 // ---------- the home page ----------
+// The width the screen may take: the main column, less the panel and the gap when they sit side by side.
+function stageWidth(screenEl) {
+  const main = screenEl.closest('main');
+  const panel = main?.querySelector(':scope > .panel');
+  if (!main) return screenEl.parentElement?.clientWidth || innerWidth;
+  const cs = getComputedStyle(main);
+  const inner = main.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+  const beside = panel && cs.gridTemplateColumns.trim().split(/\s+/).length > 1;
+  return beside ? inner - panel.offsetWidth - (parseFloat(cs.columnGap) || 0) : inner;
+}
+const wide = () => !matchMedia('(max-width: 900px)').matches;
+
+// Query options: ?kiosk=1 (only the screen and the band), ?theme=<name>, ?example=1 (the fixed example
+// state), ?phase=1|2|3 (the phase to start on), ?autoplay=0|1.
 export async function boot() {
   const screenEl = document.getElementById('billboard-screen');
   const panelEl = document.getElementById('billboard-control');
   if (!screenEl || !panelEl) return null;
   const q = new URLSearchParams(location.search);
   const kiosk = q.get('kiosk') === '1';
-  const theme = /^[a-z0-9-]{1,32}$/.test(q.get('theme') || '') ? q.get('theme') : 'live';
-  if (kiosk) document.documentElement.classList.add('is-kiosk');
-  return mountControl(panelEl, screenEl, { screen: { theme, controls: !kiosk, decision: !kiosk, maxHeight: kiosk ? () => innerHeight : undefined } });
+  const example = q.get('example') === '1';
+  const themeQ = q.get('theme') || '';
+  const theme = THEMES.includes(themeQ) || /^[a-z0-9-]{1,32}$/.test(themeQ) ? themeQ : 'live';
+  const phase = Math.max(1, Math.min(3, Number(q.get('phase')) || 1)) - 1;
+  const autoplay = q.get('autoplay') === '0' ? false : q.get('autoplay') === '1' ? true : undefined;
+  const root = document.documentElement;
+  if (kiosk) root.classList.add('is-kiosk');
+  if (example) root.classList.add('is-example');
+  const screen = kiosk
+    ? { theme, phase, autoplay, controls: false, decision: false, keys: 'page', maxWidth: () => innerWidth, maxHeight: ctx => Math.max(240, innerHeight - ctx.top), minHeight: 240 }
+    : { theme, phase, autoplay, maxWidth: () => stageWidth(screenEl), maxHeight: ctx => fitWindow(ctx, { belowTop: wide() }) };
+  if (kiosk) hidePointer();
+  return mountControl(panelEl, screenEl, { example, screen });
+}
+// Kiosk: hide the mouse pointer after 3 seconds without movement.
+function hidePointer() {
+  let t = null;
+  const show = () => { document.documentElement.classList.remove('is-idle'); clearTimeout(t); t = setTimeout(() => document.documentElement.classList.add('is-idle'), 3000); };
+  addEventListener('mousemove', show, { passive: true });
+  show();
 }
 if (typeof document !== 'undefined' && document.getElementById('billboard-screen')) boot();
 export { DEFAULTS };
