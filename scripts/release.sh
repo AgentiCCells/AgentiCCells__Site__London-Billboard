@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 # Run every gate, then rebase on dev and push. Stops at the first failure. Never pipe a gate.
+# Copied from AgentiCCells/AgentiCCells__Site__Algarve-Holiday-Homes (Apache-2.0, same organisation) by
+# developer.london-billboard@AgentiCCells.dinis, 2026-11-18, round 1: adds role-scope, abp-check and the tests.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 # Refuse during a hold (finding 3), with uncommitted changes (finding 4: the gates must check what is
@@ -11,6 +13,9 @@ node scripts/build.mjs
 node scripts/validate.mjs
 node scripts/leak-scan.mjs
 node scripts/check-commits.mjs origin/dev HEAD
+node scripts/role-scope.mjs origin/dev HEAD
+node scripts/abp-check.mjs
+if ls tests/*.test.mjs >/dev/null 2>&1; then node --test tests/*.test.mjs; fi
 for i in 1 2 3 4 5; do
   git fetch -q origin dev
   git rebase -q origin/dev
@@ -19,6 +24,8 @@ for i in 1 2 3 4 5; do
   node scripts/validate.mjs >/dev/null
   node scripts/leak-scan.mjs >/dev/null
   node scripts/check-commits.mjs origin/dev HEAD >/dev/null
+  node scripts/role-scope.mjs origin/dev HEAD >/dev/null
+  node scripts/abp-check.mjs >/dev/null
   if git -c push.negotiate=true push -q origin HEAD:dev; then echo "released $(git rev-parse --short HEAD) to dev"; exit 0; fi
   sleep $((i * 3))
 done

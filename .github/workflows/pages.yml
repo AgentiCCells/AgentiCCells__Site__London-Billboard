@@ -2,6 +2,8 @@ name: Pages
 # From the site repositories made by sites@AgentiCCells.dinis (2026-11-16). In the
 # template itself (.factory-template exists) nothing is deployed: it is built,
 # checked and versioned only. A seeded site deploys on every push to dev.
+# role-scope, abp-check and the tests copied from AgentiCCells/AgentiCCells__Site__Algarve-Holiday-Homes
+# (Apache-2.0, same organisation) by developer.london-billboard@AgentiCCells.dinis, 2026-11-18, round 1.
 on:
   push:
     branches: [dev]
@@ -51,10 +53,15 @@ jobs:
         run: |
           last=$(git describe --tags --abbrev=0 --match "v${VERSION_BASE}.*" "$AFTER" 2>/dev/null || true)
           node scripts/check-commits.mjs "${last:-$BEFORE}" "$AFTER"
+          node scripts/role-scope.mjs "${last:-$BEFORE}" "$AFTER"
+      - name: Every Agent Behaviour Policy is in the ABP format
+        run: node scripts/abp-check.mjs
       - run: node scripts/build.mjs
         env:
           SITE_VERSION: ${{ steps.version.outputs.version }}
       - run: node scripts/validate.mjs
+      - name: Tests (after the build, so the tests of the built site run)
+        run: if ls tests/*.test.mjs >/dev/null 2>&1; then node --test tests/*.test.mjs; fi
       - name: Leak scan (tracked files and the built site)
         run: node scripts/leak-scan.mjs
       - if: steps.mode.outputs.deploy == 'true'
