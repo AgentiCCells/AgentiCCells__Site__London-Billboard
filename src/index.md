@@ -56,7 +56,7 @@ The idea is Dinis Cruz's, from his white paper "Dynamic Weather-Driven Algarve T
 
 - The idea: https://london-billboard.agenticcells.site/idea/index.md
 - Planning assistant (simulation): https://london-billboard.agenticcells.site/plan/index.md
-- Designs: https://london-billboard.agenticcells.site/d/index.md
+- Designs (/d/): not built yet; round 1 stopped on 2026-11-18 before they were finished.
 - Use the data: https://london-billboard.agenticcells.site/use-the-data/index.md
 - Use with AI: https://london-billboard.agenticcells.site/use-with-ai/index.md
 - Behind the scenes: https://london-billboard.agenticcells.site/behind-the-scenes/index.md

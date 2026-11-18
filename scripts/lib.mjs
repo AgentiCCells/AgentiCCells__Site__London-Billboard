@@ -29,7 +29,7 @@ export const NAV = [
   ['/', 'The screen'],
   ['/idea/', 'The idea'],
   ['/plan/', 'Planning assistant (simulation)'],
-  ['/d/', 'Designs'],
+  // ['/d/', 'Designs'], (round 1 stopped at Dinis's word before the designs were built; restore when src/d/ exists)
   ['/use-the-data/', 'Use the data'],
   ['/use-with-ai/', 'Use with AI'],
   ['/behind-the-scenes/', 'Behind the scenes'],
