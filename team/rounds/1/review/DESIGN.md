@@ -64,3 +64,23 @@ The proposal is careful and mostly sound: every figure has a label, the contrast
 ## Not checked here
 
 The words and the planning assistant's answers (writer's step), the data figures against data.promptugal.news beyond the screen values above (analyst's DATA.md), and the built designs (step 5).
+
+## Re-check (2026-11-18, about 18:50 to 19:00 UTC)
+
+Read: `team/rounds/1/design/PROPOSAL.md` as revised in commit b7f0485 (section "Changes after the design review", 1.1, 1.2, 1.3, 1.5, the new 1.7, 2.4, 2.5, 3.2 to 3.7, section 4) and all ten mock-ups, redrawn and rendered again to PNG with Playwright. `src/assets/` was not looked at (the developer is changing it). I recomputed the new ratios with the WCAG 2 formula: focus ring #B5650B on #F7F7F4 4.0 to 1, on #FFFFFF 4.3, against #111111 4.3; #F2B35E on #121417 10.0, on black 11.4; `computed` white on #2D5F8A 6.7. All as stated, all 3 to 1 or more for the ring and 4.5 to 1 or more for text.
+
+**Verdict: pass**
+
+| Finding | Result |
+|---|---|
+| D1 | Fixed. The example state turns every "live" into an `example` tag with its own shape, read times print "example", the decision line and ribbon add "(example values)", the small print says "Example values for this preview, not a reading.", and it is in section 4. `chooser.svg` shows no "live" on any preview. |
+| D2 | Fixed. 1.1 states the measured rule (height from the stage's top, the controls and the decision line, 480 px floor, measured at run time), an `auto` stage column of at least 20 rem, and one centred group with a 2 rem gap; `layout-wide.svg` matches it. |
+| D3 | Fixed. 1.7 covers reduced motion (paused start, no drift, cuts not fades, theme animation only under `no-preference`, kiosk holds phase 1), a focus ring on the page outside the frame and on every chooser card, the keys in kiosk, and announcements. |
+| D4 | Fixed. The sibling site's name is gone from the proposal and the design folder (searched). |
+| D5 to D13 | Fixed as listed in the proposal's table; checked in the text and in each mock-up (designs list at `src/d/designs.json`; `computed` tag beside every sun time; band whole in every mock-up and "Planning assistant (simulation)" in the navigation; Postcard stamp a solid double rule; London's column headers tagged `simulated`; Board's "EXAMPLE JOURNEY" bar and "EXAMPLE FLIGHT" row; Readout's bars named; phone screen width-bound; the small mismatches corrected). |
+
+Remaining items (not blocking; check in step 5):
+
+1. **R1, the decision line's height at 1366x900 (developer, designer to note).** 1.1 assumes about 96 px for the decision line at 20 rem. Today's line is 85 px tall at 640 px wide and 151 px at 358 px wide (measured in the first review), so at about 320 px it will be nearer 150 to 170 px. The rule measures at run time, so it still holds, but at 1366x900 the 480 px floor will probably apply (270x480) and the decision line will run under the fold, not the 305x542 the proposal expects. If the designer wants the larger screen, a wider stage column (for example at least 28 rem, so the line takes three or four lines) would do it. Step 5 checks that the screen and its controls are fully in the first view at 1366x768 and 1366x900.
+2. **R2, themes (step 5).** When the designs are built, I check each `theme.css` for `display: none` on a tag, the small print, the ribbon or the drawing note, and for `animation` or `transition` outside `prefers-reduced-motion: no-preference`, as 1.7 and 3.7 ask.
+3. **R3, developer items V1 to V7 above** stand, with V6 now unblocked: build the example state with the `example` tag of 2.4.
