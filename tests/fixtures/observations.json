@@ -1,0 +1,12 @@
+{
+  "source": "ipma-observations",
+  "read_at": "2026-11-18T17:41:00Z",
+  "hour_utc": "2026-11-18T17:00:00Z",
+  "note": "Test fixture: made-up stations and values in the shape of ipma-observations/latest.json.",
+  "stations": [
+    { "id": 1, "name": "Silent station near Braga", "lat": 41.55, "lon": -8.42, "reading": null },
+    { "id": 2, "name": "Station with no temperature", "lat": 41.56, "lon": -8.41, "reading": { "temp_c": null, "rain_mm": 0 } },
+    { "id": 3, "name": "Reporting station 20 km away", "lat": 41.37, "lon": -8.45, "reading": { "temp_c": 13.5, "rain_mm": 1.2, "wind_kmh": 10 } },
+    { "id": 4, "name": "Far station", "lat": 38.7, "lon": -9.1, "reading": { "temp_c": 18, "rain_mm": 0, "wind_kmh": 5 } }
+  ]
+}

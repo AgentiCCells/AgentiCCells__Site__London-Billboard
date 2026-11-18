@@ -1,0 +1,143 @@
+/* screen.css: the simulated billboard screen, its controls and the panel beside it.
+   The screen is drawn at 1080 x 1920 and scaled with a CSS transform (screen.js).
+   Restyle it through the custom properties on .screen, or a .theme-<name> class (SCREEN.md).
+   developer.london-billboard@AgentiCCells.dinis, 2026-11-18. Code Apache-2.0. */
+
+.screen-frame { --frame-ink: inherit; display: flex; flex-direction: column; align-items: center; gap: .6rem; width: 100%; max-width: 100%; outline: none; }
+.screen-fit { position: relative; overflow: hidden; border-radius: 10px; box-shadow: 0 0 0 6px #111, 0 10px 30px rgba(0,0,0,.35); background: #111; max-width: 100%; }
+
+.screen {
+  /* The theme hook: override these on .theme-<name>. */
+  --screen-font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --screen-headline-font: var(--screen-font);
+  --screen-ink: #ffffff;
+  --screen-ink-soft: rgba(255,255,255,.86);
+  --screen-shadow: 0 2px 14px rgba(0,0,0,.55);
+  --screen-accent: #ffd36b;
+  --screen-panel: rgba(10,22,38,.72);
+  --screen-panel-ink: #ffffff;
+  --screen-here: #9fb3c8;
+  --screen-alg: #ffd36b;
+  --screen-smallprint-bg: rgba(0,0,0,.62);
+  --screen-smallprint-ink: #f2f2f2;
+  --screen-ribbon-bg: #fbe7a1;
+  --screen-ribbon-ink: #3a2e00;
+  --tag-live-bg: #1f7a3f; --tag-live-ink: #fff;
+  --tag-sim-bg: #7a3fb0; --tag-sim-ink: #fff;
+  --tag-inv-bg: #a13d1a; --tag-inv-ink: #fff;
+  --tag-stale-bg: #ffd166; --tag-stale-ink: #3a2e00;
+  --tag-missing-bg: #555; --tag-missing-ink: #fff;
+  --tag-computed-bg: #2d5f8a; --tag-computed-ink: #fff;
+  position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0;
+  font-family: var(--screen-font); color: var(--screen-ink); background: #0b1428; overflow: hidden;
+  line-height: 1.2; text-align: left;
+}
+.screen:focus-visible { outline: 8px solid var(--screen-accent); outline-offset: -8px; }
+.screen-scene, .screen-layer { position: absolute; inset: 0; }
+.screen-scene svg { width: 100%; height: 100%; display: block; }
+.screen-layer { display: flex; flex-direction: column; }
+.screen p, .screen h1, .screen ol, .screen ul { margin: 0; max-width: none; }
+.screen th, .screen td, .screen caption { font-size: inherit; }
+
+.screen-phase { flex: 1; display: flex; flex-direction: column; padding: 110px 72px 40px; gap: 36px; }
+.screen-headline { font-family: var(--screen-headline-font); font-size: 92px; line-height: 1.05; font-weight: 800; text-shadow: var(--screen-shadow); letter-spacing: -.01em; }
+.screen-accent { color: var(--screen-accent); }
+
+/* Phase 1: the Algarve now */
+.phase-now .screen-now { margin-top: auto; margin-bottom: 40px; background: var(--screen-panel); color: var(--screen-panel-ink); padding: 40px 48px; border-radius: 28px; }
+.screen-place { font-size: 64px; font-weight: 800; }
+.screen-time { font-size: 40px; color: var(--screen-ink-soft); margin-top: 6px !important; }
+.screen-temp { font-size: 200px; font-weight: 800; line-height: 1; margin: 18px 0 8px !important; color: var(--screen-accent); }
+.screen-temp .tag { font-size: 34px; vertical-align: middle; }
+.screen-words { font-size: 42px; }
+.screen-meta { font-size: 28px; color: var(--screen-ink-soft); margin-top: 18px !important; line-height: 1.35; }
+
+/* Phase 2: the comparison */
+.phase-compare { background: linear-gradient(rgba(5,12,25,.55), rgba(5,12,25,.75)); }
+.screen-vs { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.screen-side { background: var(--screen-panel); color: var(--screen-panel-ink); border-radius: 28px; padding: 32px 36px; border-top: 14px solid var(--screen-here); }
+.side-alg { border-top-color: var(--screen-alg); }
+.side-name { font-size: 44px; font-weight: 700; }
+.side-name .tag { font-size: 26px; vertical-align: middle; }
+.side-temp { font-size: 130px; font-weight: 800; line-height: 1.05; margin: 10px 0 !important; }
+.side-alg .side-temp { color: var(--screen-alg); }
+.side-words { font-size: 38px; }
+.screen-days { width: 100%; border-collapse: collapse; background: var(--screen-panel); color: var(--screen-panel-ink); border-radius: 28px; overflow: hidden; font-size: 36px; }
+.screen-days caption { caption-side: top; text-align: left; font-size: 30px; padding: 0 0 12px; color: var(--screen-ink-soft); }
+.screen-days th, .screen-days td { padding: 20px 24px; text-align: left; vertical-align: top; border-bottom: 2px solid rgba(255,255,255,.12); }
+.screen-days thead th { font-size: 30px; color: var(--screen-ink-soft); font-weight: 600; }
+.screen-days tbody th { font-weight: 700; white-space: nowrap; }
+.screen-sunline { font-size: 46px; line-height: 1.3; background: var(--screen-panel); color: var(--screen-panel-ink); padding: 32px 40px; border-radius: 28px; }
+.screen-sunline strong { color: var(--screen-accent); }
+
+/* Phase 3: the journey */
+.phase-journey { background: linear-gradient(rgba(5,12,25,.35), rgba(5,12,25,.8)); }
+.phase-journey .screen-headline { font-size: 104px; }
+.screen-itinerary { background: var(--screen-panel); color: var(--screen-panel-ink); border-radius: 28px; padding: 36px 44px; font-size: 36px; line-height: 1.35; }
+.itin-title { font-size: 34px; font-weight: 700; margin-bottom: 12px !important; }
+.itin-title .tag { font-size: 28px; }
+.itin-depart { margin-bottom: 10px !important; }
+.screen-itinerary ol { margin: 0; padding-left: 1.3em; font-size: 32px; }
+.screen-cta { margin-top: auto; display: flex; align-items: center; gap: 44px; background: var(--screen-panel); border-radius: 28px; padding: 32px 40px; }
+.screen-qr { width: 330px; height: 330px; flex: none; border-radius: 12px; }
+.cta-text { font-size: 72px; font-weight: 800; line-height: 1.1; }
+.cta-text span { font-size: 44px; font-weight: 500; color: var(--screen-ink-soft); }
+
+/* Every phase */
+.screen-dots { display: flex; gap: 18px; justify-content: center; padding: 0 0 18px; }
+.screen-dots span { width: 22px; height: 22px; border-radius: 50%; background: rgba(255,255,255,.4); }
+.screen-dots span.on { background: var(--screen-ink); }
+.screen-smallprint { background: var(--screen-smallprint-bg); color: var(--screen-smallprint-ink); font-size: 25px; line-height: 1.4; padding: 22px 40px 26px; }
+.screen-ribbon { position: absolute; top: 0; left: 0; right: 0; padding: 18px 40px; font-size: 34px; font-weight: 700; background: var(--screen-ribbon-bg); color: var(--screen-ribbon-ink); z-index: 2; }
+.screen :where(.tag) { display: inline-block; padding: .1em .45em; border-radius: .35em; font-weight: 700; font-size: .85em; line-height: 1.2; text-shadow: none; }
+
+/* Tags (also used in the panel) */
+.tag { display: inline-block; padding: .05em .4em; border-radius: .3em; font-size: .78em; font-weight: 700; line-height: 1.3; white-space: nowrap; }
+.tag-live { background: var(--tag-live-bg, #1f7a3f); color: var(--tag-live-ink, #fff); }
+.tag-sim { background: var(--tag-sim-bg, #7a3fb0); color: var(--tag-sim-ink, #fff); }
+.tag-inv { background: var(--tag-inv-bg, #a13d1a); color: var(--tag-inv-ink, #fff); }
+.tag-stale { background: var(--tag-stale-bg, #ffd166); color: var(--tag-stale-ink, #3a2e00); }
+/* computed: a value worked out here (the sunset, from the NOAA equations), not read from a source */
+.tag-computed { background: var(--tag-computed-bg, #2d5f8a); color: var(--tag-computed-ink, #fff); }
+.tag-missing { background: var(--tag-missing-bg, #555); color: var(--tag-missing-ink, #fff); }
+
+/* The scene's movement */
+.scene-drift { animation: scene-drift 120s linear infinite alternate; }
+@keyframes scene-drift { from { transform: translateX(-60px); } to { transform: translateX(60px); } }
+.scene-rain { animation: scene-rain .7s linear infinite; }
+@keyframes scene-rain { from { transform: translate(0, -46px); } to { transform: translate(-10px, 0); } }
+.screen-phase { animation: screen-in .5s ease-out; }
+@keyframes screen-in { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .scene-drift, .scene-rain, .screen-phase { animation: none; }
+}
+
+/* Controls and the decision line, outside the screen */
+.screen-controls { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: .5rem; }
+.screen-controls button { font: inherit; font-size: .95rem; padding: .45rem .9rem; border-radius: .4rem; border: 1px solid currentColor; background: transparent; color: inherit; cursor: pointer; min-height: 44px; min-width: 44px; }
+.screen-controls button:focus-visible { outline: 3px solid #e0a100; outline-offset: 2px; }
+.screen-phase-label { font-size: .9rem; opacity: .8; }
+.screen-decision { margin: 0; max-width: 40rem; font-size: .95rem; line-height: 1.45; padding: .6rem .8rem; border-left: 4px solid #a13d1a; background: rgba(161,61,26,.08); }
+
+/* The panel */
+.control fieldset { border: 1px solid rgba(127,127,127,.4); border-radius: .5rem; margin: 0 0 1rem; padding: .6rem .9rem .9rem; }
+.control legend { font-weight: 700; padding: 0 .3rem; }
+.control label { display: block; margin: .5rem 0; }
+.control select, .control input[type=range] { display: block; width: 100%; max-width: 22rem; margin-top: .2rem; font: inherit; min-height: 2.2rem; }
+.control-radio { display: inline-flex !important; align-items: center; gap: .3rem; margin: .3rem 1rem .3rem 0 !important; min-height: 44px; }
+.control-note { font-size: .85rem; opacity: .85; margin: .2rem 0 .4rem; }
+.control-here-live { margin: 0 0 1rem; padding: .6rem .9rem; border: 1px solid rgba(127,127,127,.4); border-radius: .5rem; }
+.control-here-live h3 { margin: .2rem 0 .4rem; font-size: 1rem; }
+.control-values { margin: 0; padding-left: 1.1rem; font-size: .92rem; }
+.control-error { border-left: 4px solid #b3261e; padding: .4rem .8rem; background: rgba(179,38,30,.08); }
+.provenance h2 { font-size: 1.1rem; margin: 1rem 0 .5rem; }
+.provenance-list { padding-left: 1.1rem; font-size: .9rem; }
+.provenance-list li { margin-bottom: .6rem; }
+.provenance-terms { font-size: .85rem; }
+
+/* ?kiosk=1: only the screen, the whole window */
+.is-kiosk body { margin: 0; background: #000; }
+.is-kiosk body > :not(main), .is-kiosk main > :not(.stage), .is-kiosk .stage > :not(#billboard-screen) { display: none !important; }
+.is-kiosk main, .is-kiosk .stage { margin: 0 !important; padding: 0 !important; max-width: none !important; display: block !important; }
+.is-kiosk .screen-frame { height: 100vh; justify-content: center; }
+.is-kiosk .screen-fit { box-shadow: none; border-radius: 0; }

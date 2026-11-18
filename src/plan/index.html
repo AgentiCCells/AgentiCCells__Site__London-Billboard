@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Planning assistant (a simulation)</title>
+<meta name="description" content="Where the billboard's QR code leads: a scripted planning assistant for a short Algarve trip. A simulation: pre-written answers matched in your browser, no live model, nothing sent or kept. Weather is IPMA's live data; flights and prices are invented examples.">
+<meta name="share-image" content="/assets/share/plan.png">
+<!--HEAD-->
+<link rel="stylesheet" href="/assets/screen.css">
+<style>
+.plan{max-width:44rem;margin:0 auto}
+.plan-sim{border:2px solid #a13d1a;border-radius:.5rem;padding:.6rem .9rem;margin:0 0 1rem}
+.plan-log{display:flex;flex-direction:column;gap:.8rem;margin:1rem 0;padding:0;list-style:none}
+.plan-msg{max-width:92%;padding:.7rem .9rem;border-radius:.8rem;line-height:1.5}
+.plan-msg p{margin:.3rem 0}
+.plan-msg ul{margin:.3rem 0;padding-left:1.2rem}
+.plan-bot{align-self:flex-start;background:rgba(127,127,127,.12);border-bottom-left-radius:.2rem}
+.plan-you{align-self:flex-end;background:rgba(31,122,63,.14);border-bottom-right-radius:.2rem}
+.plan-small{font-size:.8rem;opacity:.85;border-top:1px solid rgba(127,127,127,.3);margin-top:.5rem!important;padding-top:.3rem}
+.plan-quick{display:flex;flex-wrap:wrap;gap:.5rem;margin:.5rem 0}
+.plan-quick button,.plan-form button{font:inherit;padding:.45rem .8rem;border-radius:1.2rem;border:1px solid currentColor;background:transparent;color:inherit;cursor:pointer;min-height:44px}
+.plan-form{display:flex;gap:.5rem;margin:.5rem 0 1.5rem}
+.plan-form input{flex:1;font:inherit;padding:.5rem .7rem;min-height:44px;min-width:0}
+</style>
+</head>
+<body data-sources="ipma-observations ipma-city-forecasts ipma-uv ipma-warnings events-pt">
+<!--HEADER-->
+<main id="main" class="plan">
+  <h1>Planning assistant</h1>
+  <p class="plan-sim"><strong>Simulation: scripted answers, no live model.</strong> The answers are pre-written and matched to your words in your browser. Nothing you type is sent anywhere or kept after you leave the page. The Algarve weather is IPMA's live data (via data.promptugal.news); flights, prices and times are invented examples; no booking is possible.</p>
+  <p id="plan-context">Reading where you scanned from...</p>
+  <ol class="plan-log" id="plan-log" aria-live="polite"></ol>
+  <div class="plan-quick" id="plan-quick" role="group" aria-label="Quick replies"></div>
+  <form class="plan-form" id="plan-form" autocomplete="off">
+    <label for="plan-input" class="sr-only">Your question</label>
+    <input id="plan-input" name="q" placeholder="Ask about the weather, getting there, what is on..." maxlength="200">
+    <button type="submit">Ask</button>
+  </form>
+  <noscript><p>The assistant needs JavaScript. It is a simulation in any case: the <a href="/">screen</a> and <a href="/idea/">the idea</a> explain what it would do.</p></noscript>
+  <p><a href="/">Back to the screen</a> · <a href="/idea/">The idea (Dinis Cruz's white paper)</a></p>
+</main>
+<!--FOOTER-->
+<script type="module" src="/assets/js/plan.js"></script>
+</body>
+</html>

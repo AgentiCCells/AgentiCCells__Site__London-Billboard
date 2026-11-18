@@ -1,0 +1,12 @@
+{
+  "source": "ipma-city-forecasts",
+  "read_at": "2026-11-18T17:39:25Z",
+  "note": "Test fixture: made-up values in the shape of ipma-city-forecasts/latest.json.",
+  "cities": [
+    { "id": 1030300, "name": "Braga", "lat": 41.5475, "lon": -8.4227, "read_at": "2026-11-18T17:39:30Z",
+      "days": [ { "date": "2026-11-18", "t_min_c": 12, "t_max_c": 15, "rain_prob_pct": 100, "weather_type": 9 },
+                { "date": "2026-11-19", "t_min_c": 11, "t_max_c": 14, "rain_prob_pct": 90, "weather_type": 6 } ] },
+    { "id": 1131200, "name": "Porto", "lat": 41.158, "lon": -8.6294, "read_at": "2026-11-18T17:39:31Z",
+      "days": [ { "date": "2026-11-18", "t_min_c": 14, "t_max_c": 17, "rain_prob_pct": 100, "weather_type": 9 } ] }
+  ]
+}

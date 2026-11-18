@@ -3,15 +3,38 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>A London billboard, live from the Algarve</title>
-<meta name="description" content="A simulated demonstration: a weather-driven London billboard showing the Algarve live, built by an agentic team from the public data PrompTugal.news collects.">
-<style>body{margin:0;font:18px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif;background:#fbf7f0;color:#222}main{max-width:40rem;margin:0 auto;padding:3rem 1rem}h1{font-size:2rem;line-height:1.2}.muted{color:#666;font-size:.9rem}@media(prefers-color-scheme:dark){body{background:#17140f;color:#eee}.muted{color:#aaa}}</style>
+<title>A London billboard, live from the Algarve (a simulation)</title>
+<meta name="description" content="A simulated weather-driven billboard: a portrait screen in London, Porto, Braga or Lisbon showing the Algarve right now from IPMA's live data, comparing the weather and daylight, and counting the hours to the Algarve sunset. Idea: Dinis Cruz.">
+<meta name="share-image" content="/assets/share/home.png">
+<!--HEAD-->
+<link rel="stylesheet" href="/assets/screen.css">
 </head>
-<body>
-<main>
-<h1>A London billboard, live from the Algarve</h1>
-<p>A simulated demonstration: a weather-driven London billboard showing the Algarve live, built by an agentic team from the public data PrompTugal.news collects.</p>
-<p class="muted">Version __VERSION__ · Made by the <a href="https://github.com/AgentiCCells/AgentiCCells__Site__Factory">AgentiCCells site factory</a> · Code Apache-2.0, text CC BY 4.0.</p>
+<body data-sources="ipma-observations ipma-city-forecasts ipma-sea ipma-uv ipma-warnings adsb-faro">
+<!--HEADER-->
+<main id="main">
+  <div class="stage">
+    <div id="billboard-screen" aria-label="The simulated billboard screen">
+      <noscript><p>The screen needs JavaScript: it reads IPMA's live Algarve data in your browser and draws the three phases. Without it, nothing is shown here. The same data can be read directly at <a href="https://data.promptugal.news/">data.promptugal.news</a>.</p></noscript>
+    </div>
+  </div>
+  <aside class="panel" aria-label="Screen settings and sources">
+    <h2>Set the screen</h2>
+    <div id="billboard-control"><p>Loading the controls and reading the live data...</p><noscript><p>The controls need JavaScript.</p></noscript></div>
+  </aside>
+  <section class="explain">
+    <h2>What you are looking at</h2>
+    <p>A simulation of a digital billboard, drawn at the size of a portrait street screen (1080 by 1920 pixels) and scaled to fit. No such screen, campaign or booking exists. It runs three phases, about ten seconds each:</p>
+    <ol>
+      <li><strong>The Algarve right now.</strong> A drawing of the chosen place at its real local time, with the live temperature and today's IPMA forecast. It is a drawing, not a camera: live.promptugal.news offers no cameras yet (checked 2026-11-18).</li>
+      <li><strong>The comparison.</strong> Here against the Algarve now and over the next three days, and when the sun sets in each.</li>
+      <li><strong>The journey.</strong> How many hours away the Algarve sunset is, with an invented example journey and a QR code to the <a href="/plan/">planning assistant</a> (also a simulation: scripted answers, no live model).</li>
+    </ol>
+    <p>Choose where the screen stands. In London no live weather source is used, so you set the weather, temperature, time and station (each labelled "simulated"). In Porto, Braga or Lisbon the "here" side is IPMA's live data: the city's forecast and the nearest station reporting this hour, named with its distance. Under the screen, a line says whether a real screen would run now (here colder, wetter or darker than the Algarve), switch message, or pause, and why. When the Algarve is wet too, it says so.</p>
+    <p>The Algarve values are read live in your browser from <a href="https://data.promptugal.news/">data.promptugal.news</a>, which collects them from IPMA (Instituto Português do Mar e da Atmosfera) and, for the aircraft count near Faro, adsb.lol. Each value shows its source and the time it was read. A value that cannot be read, or is older than twice its collection interval, is marked so, never guessed. Flights, prices and times are invented examples.</p>
+    <p>The idea is Dinis Cruz's, from his white paper on a weather-driven Algarve campaign: <a href="/idea/">read about the idea</a>. Add <code>?kiosk=1</code> to the address to show only the screen, full window.</p>
+  </section>
 </main>
+<!--FOOTER-->
+<script type="module" src="/assets/js/control.js"></script>
 </body>
 </html>
