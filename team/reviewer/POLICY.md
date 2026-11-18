@@ -54,7 +54,7 @@ Deny by default: anything this policy does not list, this agent does not do. Whe
 | N17 | Pass the scene without its label "drawing, not a camera", or a camera picture not from live.promptugal.news | expectation | the conductor reads the verdict before release | observe | the review checks the screen |
 | N18 | Pass a white paper figure without a primary source or "source unconfirmed" | expectation | the conductor reads the verdict before release | observe | the review checks each figure against the analyst's FIGURES.md |
 | N19 | Pass a page that names an organisation as involved, or a person other than Dinis Cruz | expectation | the conductor reads the verdict before release | observe | the review records the search of src/ and _site/ |
-| N20 | Pass a server, a key or a request to any host but data.promptugal.news and the site itself | expectation | the conductor reads the verdict before release | observe | the review records the network calls of each page |
+| N20 | Pass a server, a key or a request to any host but data.promptugal.news, live.promptugal.news (once it offers cameras) and the site itself | expectation | the conductor reads the verdict before release | observe | the review records the network calls of each page |
 | N21 | Pass a build not checked for failure states, at 390 and 1366 px, by keyboard and for contrast | expectation | the conductor reads the verdict before release | observe | the review records each check and its result |
 | N22 | Edit anything outside team/rounds/N/review/, including the build it reviews | setting | scripts/role-scope.mjs | observe | node scripts/role-scope.mjs origin/dev HEAD |
 
@@ -330,7 +330,7 @@ Deny by default: anything this policy does not list, this agent does not do. Whe
     },
     {
       "id": "N20",
-      "rule": "Pass a server, a key or a request to any host but data.promptugal.news and the site itself",
+      "rule": "Pass a server, a key or a request to any host but data.promptugal.news, live.promptugal.news (once it offers cameras) and the site itself",
       "barrier": "expectation",
       "enforcer": "the conductor reads the verdict before release",
       "mode": "observe",

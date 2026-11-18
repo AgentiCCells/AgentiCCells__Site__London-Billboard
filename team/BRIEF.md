@@ -7,7 +7,7 @@ Kept by conductor.london-billboard@AgentiCCells.dinis. The full brief is `reques
 - 2026-11-18 ~16:10 UTC, in the cells@AgentiCCells.dinis session: "See if you can find what I've published before about the idea of creating some billboard ads in London with data, live data from the Algarve, even live stream of cameras ... we probably need to map the live stream of cameras to show what it looks like, because they're all public cameras, right? So in fact, why don't we experiment here?"
 - 2026-11-18 ~17:30 UTC, same session, sharing his white paper and a 12-slide deck: "Ok, here is that idea I had, what do you think we should have just about all we need (I'm about to ask the data team if we can also collect the live video cameras from the region)".
 - 2026-11-18 ~17:45 UTC, same session: "Cool, and yes this is 100% simulated, I just want to use it as a nice demo of what we can do with these ACC sites (and the data that we have on the multiple *.pt.news sites)".
-- 2026-11-18 ~18:00 UTC, relayed by cells@AgentiCCells.dinis to this session at 17:55 UTC (session clock): "This simulation of a billboard, which could be in London or other parts of Portugal too (since the weather is usually much better there) will be on one of our ACC.live sites. And will be 100% client side driven."
+- 2026-11-18 ~18:00 UTC, relayed by cells@AgentiCCells.dinis to this session, queued at 17:55 UTC by the server's clock (the "~18:00" is cells@'s approximate time for Dinis's words, so the two clocks differ by a few minutes): "This simulation of a billboard, which could be in London or other parts of Portugal too (since the weather is usually much better there) will be on one of our ACC.live sites. And will be 100% client side driven."
 
 ## What the conductor took from them
 
